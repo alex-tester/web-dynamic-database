@@ -2287,8 +2287,8 @@ function exportTableToCSV($table, filename) {
 //Functions for Reporting Overview
 
 function RequestCount_blockmethod() {
-    //Place the CCF spinning logo in the box until the ajax completes (ajax will replace this html once completed)
-    $('#BlockData_RequestCount').html('<img src="https://util.obs.org/SharedImages/cc_bug.gif" height="32px" class="center-block"/>');
+    //Place the obs spinning logo in the box until the ajax completes (ajax will replace this html once completed)
+    $('#BlockData_RequestCount').html('<img src="https://util.obs.org/SharedImages/hmm.gif" height="32px" class="center-block"/>');
 
     var cat = $("#ddlCategory option:selected").text();
     var fc = $("#ddlFormCollection option:selected").text();
@@ -2315,8 +2315,8 @@ function RequestCount_blockmethod() {
 }
 
 function AverageClose_blockmethod() {
-    //Place the CCF spinning logo in the box until the ajax completes (ajax will replace this html once completed)
-    $('#BlockData_AverageClose').html('<img src="https://util.obs.org/SharedImages/cc_bug.gif" height="32px" class="center-block"/>');
+    //Place the obs spinning logo in the box until the ajax completes (ajax will replace this html once completed)
+    $('#BlockData_AverageClose').html('<img src="https://util.obs.org/SharedImages/hmm.gif" height="32px" class="center-block"/>');
 
     var cat = $("#ddlCategory option:selected").text();
     var fc = $("#ddlFormCollection option:selected").text();
