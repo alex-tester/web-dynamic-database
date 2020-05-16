@@ -15,6 +15,18 @@ $databasePath = "C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL
 $dbOwners = @("Observicing\GS-SQL-Admins")
 
 
+#define script variables
+$createDbsql = Get-Content "$($sqlScriptPath)\DatabaseTemplate\CreateDatabaseSchema.txt"
+$createtablesSql = Get-Content "$($sqlScriptPath)\DatabaseTemplate\CreateDatabaseTables.txt"
+$sqlDataTypes = Import-Csv "$sqlScriptPath\DatabaseTemplate\SQLDataTypes.csv"
+$sqlStdGroups = Import-Csv "$sqlScriptPath\DatabaseTemplate\StandardsGroups.csv"
+$sqlSampleTables = Get-Content "$sqlScriptPath\DatabaseTemplate\CreateSampleTables.txt"
+$sqlAdForestLevelsData = Import-Csv "$sqlScriptPath\DatabaseTemplate\ForestFunctionalLevels.csv"
+$sqlStdAdDomains = Import-Csv "$sqlScriptPath\DatabaseTemplate\ActiveDirectoryDomains.csv"
+$sampleStandardData = Import-Csv "$sqlScriptPath\DatabaseTemplate\SampleStandardData.csv"
+$sampleStandardConfigs = Import-Csv "$sqlScriptPath\DatabaseTemplate\SampleStandardConfigs.csv"
+
+
 
 #import SqlServer module
 Import-Module -Name "SqlServer"
@@ -42,28 +54,7 @@ if ($dbExists)
 }
  
 # create variable with SQL to execute
-$createDbsql = Get-Content "$($sqlScriptPath)\CreateDatabaseSchema.txt"
 $createDbsql = $createDbsql -f $databaseName,$databasePath
-<#
-$createDbsql = "
-CREATE DATABASE {0}
- CONTAINMENT = NONE
- ON  PRIMARY
-( NAME = N'{0}', FILENAME = N'{1}\{0}.mdf' , SIZE = 1048576KB , FILEGROWTH = 262144KB )
- LOG ON
-( NAME = N'{0}_log', FILENAME = N'{1}\{0}_log.ldf' , SIZE = 524288KB , FILEGROWTH = 131072KB )
-GO
-
-USE [master]
-GO
-ALTER DATABASE {0} SET RECOVERY SIMPLE WITH NO_WAIT
-GO
-
-ALTER AUTHORIZATION ON DATABASE::{0} TO [sa]
-
-GO" -f $databaseName,$databasePath
-#>
-#Create Database
 Invoke-SqlCmd -ServerInstance $sqlInstance -Query $createDbsql
 
 
@@ -81,12 +72,11 @@ foreach ($u in $dbOwners)
 #>
 
 #Create Tables
-$createtablesSql = Get-Content "$($sqlScriptPath)\CreateDatabaseTables.txt"
 $createtablesSql = $createtablesSql -f $databaseName
 Invoke-SqlCmd -ServerInstance $sqlInstance -Query $createtablesSql
 
 
-$sqlDataTypes = Import-Csv "$sqlScriptPath\SQLDataTypes.csv"
+
 #Populate Tables
 for ($i = 0; $i -lt $sqlDataTypes.Count; $i++)
 {
@@ -96,7 +86,6 @@ for ($i = 0; $i -lt $sqlDataTypes.Count; $i++)
     Invoke-SqlCmd -ServerInstance $sqlInstance -Query $populateDataTypeSql
 }
 
-$sqlStdGroups = Import-Csv "$sqlScriptPath\StandardsGroups.csv"
 #Populate Tables
 for ($i = 0; $i -lt $sqlStdGroups.Count; $i++)
 {
@@ -106,18 +95,12 @@ for ($i = 0; $i -lt $sqlStdGroups.Count; $i++)
     Invoke-SqlCmd -ServerInstance $sqlInstance -Query $populateStdGroupsSql
 }
 
-#Create sample data
-<#
-$sqlAdForestLevels = Get-Content "$sqlScriptPath\CreateForestFunctionalLevels.txt"
-$sqlAdForestLevels = $sqlAdForestLevels -f $databaseName
-Invoke-SqlCmd -ServerInstance $sqlInstance -Query $sqlAdForestLevels
-#>
-$sqlSampleTables = Get-Content "$sqlScriptPath\CreateSampleTables.txt"
+
 $sqlSampleTables = $sqlSampleTables -f $databaseName
 Invoke-SqlCmd -ServerInstance $sqlInstance -Query $sqlSampleTables
 
 
-$sqlAdForestLevelsData = Import-Csv "$sqlScriptPath\ForestFunctionalLevels.csv"
+
 #Populate Tables
 for ($i = 0; $i -lt $sqlAdForestLevelsData.Count; $i++)
 {
@@ -126,15 +109,11 @@ for ($i = 0; $i -lt $sqlAdForestLevelsData.Count; $i++)
     VALUES ('{1}','{2}','{3}','{4}','{5}')" -f $databaseName,$sqlAdForestLevelsData[$i].CreatedBy,
     $sqlAdForestLevelsData[$i].ModifiedBy,$sqlAdForestLevelsData[$i].Enabled,
     $sqlAdForestLevelsData[$i].SortOrder,$sqlAdForestLevelsData[$i].ForestFunctionalLevel
-   # INSERT INTO [{0}].[dbo].[StForestFunctionalLevels] (CreatedOn, CreatedBy, ModifiedOn, ModifiedBy, Enabled, SortOrder, ForestFunctionalLevel)
-   # VALUES ('{1}','{2}','{3}','{4}','{5}','{6}','{7}')" -f $databaseName,$($sqlAdForestLevelsData[$i].CreatedOn,$sqlAdForestLevelsData[$i].CreatedBy,
-   # $sqlAdForestLevelsData[$i].ModifiedOn,$sqlAdForestLevelsData[$i].ModifiedBy,$sqlAdForestLevelsData[$i].Enabled,$sqlAdForestLevelsData[$i].SortOrder,
-   # $sqlAdForestLevelsData[$i].ForestFunctionalLevel)
     Invoke-SqlCmd -ServerInstance $sqlInstance -Query $populateSqlAdForestLevelsData
 }
 
-$sqlStdAdDomains = Import-Csv "$sqlScriptPath\ActiveDirectoryDomains.csv"
-#Populate Tables
+
+#Populate Main Standard Tables
 for ($i = 0; $i -lt $sqlStdAdDomains.Count; $i++)
 {
     $populateStdGroupsSql = "
@@ -144,14 +123,7 @@ for ($i = 0; $i -lt $sqlStdAdDomains.Count; $i++)
     Invoke-SqlCmd -ServerInstance $sqlInstance -Query $populateStdGroupsSql
 }
 
-<#
-$sqlForestLevelsStandard = "INSERT INTO [{0}].[DBO].[Standard] (StandardGroupID,DBTableName,	StandardName,	StandardDefinition,	ManageRoles,
-	VersionConfig,	VersionValue,	NotifiyOwner,	ViewerRoles,	UsageCount,	CreatedBy,	ModifiedBy)
-VALUES (2,	'StForestFunctionalLevels',	'Forest Functional Levels',	'AD Forest Functional Levels',	
-'Admin',	0,	0,	0,	'Admin',	0,	'atester', 'atester')" -f $databaseName
-Invoke-SqlCmd -ServerInstance $sqlInstance -Query $sqlForestLevelsStandard
-#>
-$sampleStandardData = Import-Csv "$sqlScriptPath\SampleStandardData.csv"
+
 for ($i = 0; $i -lt $sampleStandardData.Count; $i++)
 {
     $sqlStandardData = "INSERT INTO [{0}].[DBO].[Standard] (
@@ -177,8 +149,7 @@ for ($i = 0; $i -lt $sampleStandardData.Count; $i++)
       Invoke-SqlCmd -ServerInstance $sqlInstance -Query $sqlStandardData
 }
 
-#Run This Last
-$sampleStandardConfigs = Import-Csv "$sqlScriptPath\SampleStandardConfigs.csv"
+#Run This Last - Standard Configs
 for ($i = 0; $i -lt $sampleStandardConfigs.Count; $i++)
 {
     $sqlStandardConfig = "INSERT INTO [{0}].[DBO].[StandardConfig] (      

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\DevGit\\AutomationStandards\\AutomationStandards\\AutomationStandards.csproj": {}
+    "F:\\DevGit\\web-dynamic-database\\AutomationStandards\\AutomationStandards.csproj": {}
   },
   "projects": {
-    "F:\\DevGit\\AutomationStandards\\AutomationStandards\\AutomationStandards.csproj": {
+    "F:\\DevGit\\web-dynamic-database\\AutomationStandards\\AutomationStandards.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\DevGit\\AutomationStandards\\AutomationStandards\\AutomationStandards.csproj",
+        "projectUniqueName": "F:\\DevGit\\web-dynamic-database\\AutomationStandards\\AutomationStandards.csproj",
         "projectName": "AutomationStandards",
-        "projectPath": "F:\\DevGit\\AutomationStandards\\AutomationStandards\\AutomationStandards.csproj",
+        "projectPath": "F:\\DevGit\\web-dynamic-database\\AutomationStandards\\AutomationStandards.csproj",
         "packagesPath": "C:\\Users\\tester\\.nuget\\packages\\",
-        "outputPath": "F:\\DevGit\\AutomationStandards\\AutomationStandards\\obj\\",
+        "outputPath": "F:\\DevGit\\web-dynamic-database\\AutomationStandards\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Microsoft\\Xamarin\\NuGet\\",
