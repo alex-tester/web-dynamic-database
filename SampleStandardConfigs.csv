@@ -1,0 +1,5 @@
+StandardID,FieldName,DisplayName,DataTypeID,SortOrder,VersionNumber,UseToolTip,ToolTip,UseStandardData,AllowMultiSelect,StandardLUID,StandardLUValue,StandardUseFilter,StandardFilterSQL,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy
+1,ForestFunctionalLevel,ForestFunctionalLevel,4,1,0,0,NULL,0,0,0,NULL,0,NULL,40:12.4,atester,40:12.4,atester
+2,DomainShortName,Domain Short Name,1,1,0,0,NULL,0,0,0,NULL,0,NULL,41:41.6,atester,41:41.6,atester
+2,ForestFunctionalLevel,ForestFunctionalLevel,4,2,0,1,This data is populated from the Forest Functional Levels Standard,1,0,1,ForestFunctionalLevel,0,NULL,33:51.2,atester,33:51.2,atester
+2,DomainLongName,Domain Long Name,4,3,0,0,NULL,0,0,0,NULL,0,NULL,40:49.8,atester,40:49.8,atester

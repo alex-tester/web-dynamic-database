@@ -1,0 +1,186 @@
+USE [{0}]
+
+/****** Object:  Table [dbo].[StandardDataType]    Script Date: 4/26/2020 2:15:59 AM ******/
+SET ANSI_NULLS ON
+
+
+SET QUOTED_IDENTIFIER ON
+
+
+CREATE TABLE [dbo].[StandardDataType](
+	[DataTypeID] [int] IDENTITY(1,1) NOT NULL,
+	[DataTypeName] [varchar](50) NULL,
+	[SQLDataType] [varchar](50) NULL,
+	[CreatedOn] [datetime] NULL,
+	[CreatedBy] [varchar](50) NULL,
+	[ModifiedOn] [datetime] NULL,
+	[ModifiedBy] [varchar](50) NULL,
+ CONSTRAINT [PK_StandardDataType] PRIMARY KEY CLUSTERED 
+(
+	[DataTypeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+ALTER TABLE [dbo].[StandardDataType] ADD  CONSTRAINT [DF_StandardDataType_CreatedOn]  DEFAULT (getdate()) FOR [CreatedOn]
+ALTER TABLE [dbo].[StandardDataType] ADD  CONSTRAINT [DF_StandardDataType_ModifiedOn]  DEFAULT (getdate()) FOR [ModifiedOn]
+
+USE [{0}]
+
+
+/****** Object:  Table [dbo].[StandardGroup]    Script Date: 4/26/2020 2:16:14 AM ******/
+SET ANSI_NULLS ON
+
+
+SET QUOTED_IDENTIFIER ON
+
+
+CREATE TABLE [dbo].[StandardGroup](
+	[StandardGroupID] [int] IDENTITY(1,1) NOT NULL,
+	[StandardGroupName] [varchar](50) NULL,
+	[CreatedOn] [datetime] NULL,
+	[CreatedBy] [varchar](50) NULL,
+	[ModifiedOn] [datetime] NULL,
+	[ModifiedBy] [varchar](50) NULL,
+ CONSTRAINT [PK_StandardGroup] PRIMARY KEY CLUSTERED 
+(
+	[StandardGroupID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+ALTER TABLE [dbo].[StandardGroup] ADD  CONSTRAINT [DF_StandardGroup_CreatedOn]  DEFAULT (getdate()) FOR [CreatedOn]
+ALTER TABLE [dbo].[StandardGroup] ADD  CONSTRAINT [DF_StandardGroup_ModifiedOn]  DEFAULT (getdate()) FOR [ModifiedOn]
+
+USE [{0}]
+
+
+/****** Object:  Table [dbo].[Standard]    Script Date: 4/26/2020 2:15:04 AM ******/
+SET ANSI_NULLS ON
+
+
+SET QUOTED_IDENTIFIER ON
+
+
+CREATE TABLE [dbo].[Standard](
+	[StandardID] [int] IDENTITY(1,1) NOT NULL,
+	[StandardGroupID] [int] NOT NULL,
+	[DBTableName] [varchar](60) NULL,
+	[StandardName] [varchar](50) NULL,
+	[StandardDefinition] [varchar](250) NULL,
+	[ManageRoles] [varchar](500) NULL,
+	[VersionConfig] [int] NOT NULL,
+	[VersionValue] [int] NOT NULL,
+	[Tags] [varchar](500) NULL,
+	[NotifiyOwner] [bit] NOT NULL,
+	[OwnerEmail] [varchar](250) NULL,
+	[ViewerRoles] [varchar](500) NOT NULL,
+	[UsageCount] [int] NOT NULL,
+	[CreatedOn] [datetime] NULL,
+	[CreatedBy] [varchar](50) NULL,
+	[ModifiedOn] [datetime] NULL,
+	[ModifiedBy] [varchar](50) NULL,
+ CONSTRAINT [PK_Standard_1] PRIMARY KEY CLUSTERED 
+(
+	[StandardID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+ALTER TABLE [dbo].[Standard] ADD  CONSTRAINT [DF_Standard_VersionNumber]  DEFAULT ((0)) FOR [VersionConfig]
+
+
+ALTER TABLE [dbo].[Standard] ADD  CONSTRAINT [DF_Standard_VersioValue]  DEFAULT ((0)) FOR [VersionValue]
+
+
+ALTER TABLE [dbo].[Standard] ADD  CONSTRAINT [DF_Standard_NotifiyOwner]  DEFAULT ((0)) FOR [NotifiyOwner]
+
+
+ALTER TABLE [dbo].[Standard] ADD  CONSTRAINT [DF_Standard_ViewerRoles]  DEFAULT ('GLOBAL_USER') FOR [ViewerRoles]
+
+
+ALTER TABLE [dbo].[Standard] ADD  CONSTRAINT [DF__Standard__UsageC__61915EA7]  DEFAULT ((0)) FOR [UsageCount]
+ALTER TABLE [dbo].[Standard] ADD  CONSTRAINT [DF_Standard_CreatedOn]  DEFAULT (getdate()) FOR [CreatedOn]
+ALTER TABLE [dbo].[Standard] ADD  CONSTRAINT [DF_Standard_ModifiedOn]  DEFAULT (getdate()) FOR [ModifiedOn]
+
+ALTER TABLE [dbo].[Standard]  WITH CHECK ADD  CONSTRAINT [FK_Standard_StandardGroup] FOREIGN KEY([StandardGroupID])
+REFERENCES [dbo].[StandardGroup] ([StandardGroupID])
+
+
+ALTER TABLE [dbo].[Standard] CHECK CONSTRAINT [FK_Standard_StandardGroup]
+
+
+
+USE [{0}]
+
+
+/****** Object:  Table [dbo].[StandardConfig]    Script Date: 4/26/2020 2:15:43 AM ******/
+SET ANSI_NULLS ON
+
+
+SET QUOTED_IDENTIFIER ON
+
+
+CREATE TABLE [dbo].[StandardConfig](
+	[StandardConfigID] [int] IDENTITY(1,1) NOT NULL,
+	[StandardID] [int] NOT NULL,
+	[FieldName] [varchar](50) NULL,
+	[DisplayName] [varchar](150) NULL,
+	[DataTypeID] [int] NOT NULL,
+	[SortOrder] [int] NOT NULL,
+	[VersionNumber] [int] NOT NULL,
+	[UseToolTip] [bit] NOT NULL,
+	[ToolTip] [varchar](250) NULL,
+	[UseStandardData] [bit] NOT NULL,
+	[AllowMultiSelect] [bit] NOT NULL,
+	[StandardLUID] [int] NOT NULL,
+	[StandardLUValue] [varchar](50) NULL,
+	[StandardUseFilter] [bit] NOT NULL,
+	[StandardFilterSQL] [varchar](500) NULL,
+	[CreatedOn] [datetime] NULL,
+	[CreatedBy] [varchar](50) NULL,
+	[ModifiedOn] [datetime] NULL,
+	[ModifiedBy] [varchar](50) NULL,
+ CONSTRAINT [PK_StandardConfig] PRIMARY KEY CLUSTERED 
+(
+	[StandardConfigID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_VersionNumber]  DEFAULT ((0)) FOR [VersionNumber]
+
+
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_UseToolTip]  DEFAULT ((0)) FOR [UseToolTip]
+
+
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_UseStandardData]  DEFAULT ((0)) FOR [UseStandardData]
+
+
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_AllowMultiSelect]  DEFAULT ((0)) FOR [AllowMultiSelect]
+
+
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_StandardLUID]  DEFAULT ((0)) FOR [StandardLUID]
+
+
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_StandardUseFilter]  DEFAULT ((0)) FOR [StandardUseFilter]
+
+
+ALTER TABLE [dbo].[StandardConfig]  WITH CHECK ADD  CONSTRAINT [FK_StandardConfig_Standard] FOREIGN KEY([StandardID])
+REFERENCES [dbo].[Standard] ([StandardID])
+
+
+ALTER TABLE [dbo].[StandardConfig] CHECK CONSTRAINT [FK_StandardConfig_Standard]
+
+
+ALTER TABLE [dbo].[StandardConfig]  WITH CHECK ADD  CONSTRAINT [FK_StandardConfig_StandardDataType] FOREIGN KEY([DataTypeID])
+REFERENCES [dbo].[StandardDataType] ([DataTypeID])
+
+
+ALTER TABLE [dbo].[StandardConfig] CHECK CONSTRAINT [FK_StandardConfig_StandardDataType]
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_CreatedOn]  DEFAULT (getdate()) FOR [CreatedOn]
+ALTER TABLE [dbo].[StandardConfig] ADD  CONSTRAINT [DF_StandardConfig_ModifiedOn]  DEFAULT (getdate()) FOR [ModifiedOn]
+
+
+USE [{0}]
+
+
+
+
+

@@ -1,0 +1,116 @@
+﻿@model int
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_StandardLayout.cshtml";
+}
+
+
+
+<div class="content block">
+    <div id="divGrid"></div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //ShowStandardViewer('Model');
+        LoadPageBody('StandardViewer','Standard',true,@Model);
+    });
+
+    function ShowStandardViewer(StandardID) {
+        ShowContent(StandardID, 'left', 'right', 'StandardViewer', 'Standard');
+    }
+
+    function CloseStandardViewer() {
+        var url = getActionURL("Index", "Standard");
+        window.location.replace(url);
+    }
+    function RefreshStandardViewer(StandardID) {
+        $("#divGrid").fadeOut("fast").fadeIn("fast").load(getActionURL("StandardViewer", "Standard"), { id: StandardID });
+    }
+
+
+    function ShowStandardEditor(id, StandardID) {
+
+        $('#divGrid').hide('slide', { direction: 'left' }, 500).promise().done(function () {
+
+            $.ajax({
+                type: "POST",
+                url: getActionURL("StandardEditor", "Standard"),
+                data: $.param({ "id": id, StandardID: StandardID }),
+                success: function (result) {
+
+                    $("#divGrid").html(result);
+                },
+                failure: function (result) {
+                    alert(result);
+                }
+            });
+
+
+            $('#divGrid').show('slide', { direction: 'right' }, 500);
+        });
+    }
+
+    function CloseStandardEditor(StandardID) {
+        ShowContent(StandardID, 'right', 'left', 'StandardViewer', 'Standard');
+    }
+
+    function ProcessStandardValue(StandardID) {
+        var v = $("#frmEditor").kendoValidator().data("kendoValidator");
+
+
+        //Temp Code to address null select inputs
+        $('#frmEditor select').each(
+            function (index) {
+                var input = $(this);
+                if (input.val() == null) {
+                    var selectName = input.attr('name');
+                    var selectNameHidden = $('input:hidden[name=' + selectName + ']').val();
+                    if (selectNameHidden == null) {
+                        $('<input />').attr('type', 'hidden')
+                            .attr('name', selectName)
+                            .attr('value', "")
+                            .appendTo('#frmEditor');
+                    }
+                }
+            }
+        )
+        //end Temp Code
+
+
+        var isValid = v.validate();
+
+        if (isValid) {
+            $.ajax({
+                type: "POST",
+                url: getActionURL("ProcessStandardValue", "Standard"),
+                data: $("#frmEditor").serialize(), // serializes the Standard's elements.
+                success: function (result) {
+                    CloseStandardEditor(StandardID);
+                },
+                failure: function (result) {
+                    alert(result);
+                }
+            })
+        }
+    }
+
+    function DeleteStandard(id, StandardID) {
+
+        $.ajax({
+            type: "POST",
+            url: getActionURL("DeleteStandardValue", "Standard"),
+            data: $.param({ "id": id, StandardID: StandardID }), // serializes the Standard's elements.
+            success: function (result) {
+
+                RefreshStandardViewer(StandardID);
+            },
+            failure: function (result) {
+                alert(result);
+            }
+        });
+
+    }
+
+</script>

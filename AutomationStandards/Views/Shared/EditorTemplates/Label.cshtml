@@ -1,0 +1,32 @@
+﻿@model object
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    string DisplayValue = ViewBag.DisplayValue;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string RegExp = ViewBag.RegExp;
+    string ValErrorMessage = "Please provide a Valid " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+
+    int maxLength = Convert.ToInt32(ViewBag.MaxLength);
+    if (maxLength == 0)
+    {
+        maxLength = 50;
+    }
+
+    bool fieldHidden = ViewBag.HideField;
+
+}
+
+
+
+@if (bool.Parse(ViewData["Required"].ToString()))
+{
+    <input type="hidden" name="@FieldName" value="@FieldValue" id="@FieldName" title="required field" required="required" />
+    <span name="@(FieldName + "l")" value="@FieldValue" id="@(FieldName+ "l")">@Html.Raw(DisplayValue)</span>
+}
+else
+{
+    <input type="hidden" name="@FieldName" value="@FieldValue" id="@FieldName" />
+    <span name="@(FieldName + "l")" value="@FieldValue" id="@(FieldName+ "l")">@Html.Raw(DisplayValue)</span>
+}
+

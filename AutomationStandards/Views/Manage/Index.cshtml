@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_ManageLayout.cshtml";
+}
+
+<div class="content block ">
+
+    <h2>Manage Standards Framework</h2>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-lg-3">
+            <p>Manage Standards Infrastucture.  Click on the links below.</p>
+            <a href="@Url.Action("Standard", "Manage")">
+                Manage Standards
+            </a>
+            <br />
+            <a href="@Url.Action("StandardGroup","Manage")">
+                Standard Groups
+            </a>
+            <br />
+            <a href="@Url.Action("StandardDataType", "Manage")">
+                Standard Data Type
+            </a>
+            <br />
+        </div>
+        <div class="col-lg-3">
+            @*<p>Here you will be able to Manage  Requests.  Click on the links below.</p>
+            <a href="@Url.Action("Request","Manage")">
+                Manage Request
+            </a>
+            <br />*@
+        </div>
+    </div>
+
+
+    <br />
+
+    <br />
+    <br />
+</div>

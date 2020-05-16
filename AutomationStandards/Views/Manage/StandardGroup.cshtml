@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "~/Views/Shared/_ManageLayout.cshtml";
+    ViewBag.Title = "Manage Standard Group";
+}
+
+
+@*<div class="content block">
+        <h2>Manage Standard Group</h2>
+
+        Manage all of the Standard Groups
+        <br />
+        <div id="divGrid"></div>
+
+
+
+
+    </div>*@
+
+<div class="content ">
+
+    <div id="divGrid"></div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        RefreshStandardGroupGrid();
+         highlightNavMenu("Manage");
+        $("#div_PageNameHeader").html("Manage Standard Groups");
+    });
+
+</script>

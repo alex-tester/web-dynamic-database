@@ -1,0 +1,251 @@
+﻿@using System.Data
+@using AutomationStandards.Models.CustomModels
+@model  StandardValueSet
+@{bool UserHasAccess = true;
+    int standardId = ViewBag.standardId;
+    string standardName = ViewBag.standardName;
+    }
+    <div class="block">
+
+        @if (Model.StandardID == 0)
+        {
+            <div class="block-content">
+                <div class="block block-themed block-rounded drop-shadow">
+                    <div class="block-header bg-warning">
+                        <ul class="block-options"></ul>
+                        <h2 class="block-title">Invalid Standard Name</h2>
+                    </div>
+                    <div class="block-content">
+
+                        <h4>Sorry.  The name of the Standard provided is Invalid.  Please go the @Html.ActionLink("BACK", "Index", "Standard") to main Standards Page.</h4><br />
+                        <br />
+                        <br />
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+
+
+            //List<string> QueryRoles = new List<string>();
+            //foreach (string Role in Roles.GetRolesForUser().ToList())
+            //{
+            //    QueryRoles.Add(Role.ToLower());
+            //}
+
+            //List<string> StandardRoles = Model.ManageRoles.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            //List<string>
+            //    ManageRoles = new List<string>();
+            //foreach (string Role in StandardRoles)
+            //{
+            //    ManageRoles.Add(Role.Trim().ToLower());
+            //}
+
+
+            //if (ManageRoles.Intersect(QueryRoles).Any())
+            //{
+            //    UserHasAccess = true;
+            //}
+
+
+
+            <!--Table header area-->
+
+            <div class="block-header">
+                <h3 class="block-title text-primary"><i class="fa fa-database"></i> @Model.StandardName - Records: @Model.TableValues.Rows.Count</h3>
+                <div class="block-options">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick='location.href="@Url.Action("Index","Standard")"'><i class="fa fa-backward"></i> Back</button>
+                    @if (UserHasAccess)
+                    {
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="ShowPopUpEditorDynamic('StandardEditor','Standard','0','Add Standard Record', 'ProcessStandardValue', 'Standard', 'StandardViewer', 'Standard', true, '@standardId');"><i class="fa fa-plus-square mr-1"></i>Add Record</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="ShowPopUpEditorDynamic('StandardConfigEditor','Manage','0','Add Standard Field', 'ProcessStandardConfigModel', 'Manage', 'StandardViewer', 'Standard', true, '@standardId');"><i class="fa fa-plus-square mr-1"></i>Add Field</button>
+                    }
+
+
+                    @*<button class="btn btn-sm btn-success" type="button" onclick="javascript: RefreshStandardGrid();"><i class="si si-refresh"></i></button>*@
+                    <button class="btn btn-sm btn-outline-success" type="button" onclick="javascript: LoadPageBody('StandardViewer', 'Standard', true, '@Model.StandardName');"><i class="si si-refresh"></i></button>
+                    <div class="timeline-event-time block-options-item font-size-sm font-w600">
+
+                    </div>
+                </div>
+            </div>
+
+            <!--End table header area-->
+
+    <div class="block-content">
+
+        @*<table class="table table-bordered table-striped js-dataTable-full dataTable table-condensed table-responsive" id="obs_datatable">*@
+        <table class="table table-sm table-striped table-vcenter js-dataTable-full" id="obs_datatable">
+            <thead>
+                <tr>
+
+                    <th>Sort Order</th>
+                    <th>Enabled</th>
+                    @foreach (StandardConfigModel config in Model.Config.OrderBy(c => c.SortOrder))
+                    {
+                        <th>
+                            @config.DisplayName
+                            @if (config.UseToolTip)
+                            {
+                                @*<span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-placement="top" data-trigger="hover" tabindex="0" data-content="@config.ToolTip"></i>*@
+                                <span>&nbsp;&nbsp;</span><i id="help_@config.DisplayName" class="fa fa-xs fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(config.ToolTip)"></i>
+                            }
+                            <br />
+                            <span style="font-size:smaller;text-transform:none;">(@(config.FieldName))</span>
+                        </th>
+                    }
+                    @if (UserHasAccess)
+                    {
+                        @*<th style="width:120px;"></th>*@
+                        <th style="width:120px;"></th>
+                    }
+                </tr>
+            </thead>
+            <tfoot class="substandardhide">
+                <tr>
+
+                    <th>Sort Order</th>
+                    <th>Enabled</th>
+                    @foreach (StandardConfigModel config in Model.Config.OrderBy(c => c.SortOrder))
+                    {
+
+                        <th>
+                            @config.DisplayName
+
+                        </th>
+
+                    }
+
+                </tr>
+            </tfoot>
+
+            <tbody>
+
+
+
+                @foreach (DataRow row in Model.TableValues.Rows)
+                {
+                    <tr id="RowID-@(row["ID"])">
+
+                        <td class="font-w600">@row["SortOrder"]</td>
+                        <td class="font-w600">@row["Enabled"]</td>
+                        @foreach (StandardConfigModel config in Model.Config.OrderBy(c => c.SortOrder))
+                        {
+                            <td>
+                                @Html.Raw(row[config.FieldName].ToString().Replace("\n", "<br />"))
+                            </td>
+                        }
+                        @if (UserHasAccess)
+                        {
+                    <td class="font-w600" align="right" style="width: 120px">
+                        <button class="btn btn-sm btn-outline-info" type="button" title="Edit" onclick="javascript:ShowPopUpEditorDynamic('StandardEditor','Standard','@row["ID"]','Edit Standard Record', 'ProcessStandardValue', 'Standard', 'StandardViewer', 'Standard', true, '@standardId');"><i class="fa fa-edit"></i> Edit</button>
+                        @*<button class="open-DeleteConfirmation btn btn-sm btn-danger" title="Delete Standard" data-toggle="modal" data-standarname="" data-id="@row["ID"]" data-stdid="@Model.StandardID" data-target="#DeleteConfirmation"><i class="fa fa-trash"></i></button>*@
+                        <button class="btn btn-sm btn-danger" type="button" onclick='javascript:ShowPopUpDelete("DeleteStandardValue", "Standard", "@row["ID"]", "This standard record", "StandardViewer", true, "@Model.StandardID")'><i class="fa fa-trash"></i></button>
+                    </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+        }
+        <!-- Modal -->
+        <div class="modal fade" id="DeleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog-slideup">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary-dark text-white">
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                    </div>
+                    <div class="modal-body center">
+                        Are you sure you want to delete this Standard<strong><label id="DeleteObjectName"></label></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" name="delConfirm" id="delConfirm">Delete Standard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<style>
+    tfoot {
+        display: table-header-group;
+    }
+
+    .substandardhide {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        highlightNavMenu("View");
+        $("#div_PageNameHeader").html("View Standard Data - " + "@standardName" );
+        $("[data-toggle=popover]").popover();
+
+        var tbl = $("#obs_datatable").DataTable({
+
+            rowReorder: true,
+            bPaginate: false,
+            stateSave: true,
+            scrollX: true
+
+        });
+
+        tbl.on('row-reorder', function (e, diff, edit) {
+
+            var hasAccess = '@UserHasAccess.ToString().ToLower()';
+
+            if (hasAccess == 'true') {
+                var trs = $("#obs_datatable").find("tbody>tr");
+                var hashtable = {};
+                var sID = '@Model.StandardID'
+
+
+                for (var i = 0; i < trs.length ; i++) {
+                    hashtable[trs[i].id] = i + 1;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: getActionURL("UpdateStandardValueSortOrder", "Standard"),
+                    data: { data: hashtable, StandardID: sID }, // serializes the form's elements.
+                    success: function (result) {
+
+                        RefreshStandardViewer(sID);
+                    },
+                    failure: function (result) {
+                        alert(result);
+                    }
+                })
+            }
+
+        });
+    });
+
+
+    $(document).on("click", ".open-DeleteConfirmation", function () {
+        var RecordID = $(this).data('id');
+        var StandardID = $(this).data('stdid');
+        var StandardName = $(this).data('standarname');
+
+        $(".modal-body #DeleteObjectName").text(StandardName);
+
+        $(".modal-footer #delConfirm").unbind("click");
+
+        $(".modal-footer #delConfirm").click(function () {
+            $("#DeleteConfirmation").modal('hide');
+            $(".modal-backdrop").remove();
+            DeleteStandard(RecordID, StandardID);
+        });
+    });
+
+
+
+</script>

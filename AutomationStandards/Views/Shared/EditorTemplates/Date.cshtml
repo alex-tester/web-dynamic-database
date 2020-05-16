@@ -1,0 +1,36 @@
+﻿@model string
+@{
+
+    string FieldValue = ViewBag.Value ?? Model;
+
+    if (String.IsNullOrEmpty(FieldValue) == false)
+    {
+        FieldValue = Convert.ToDateTime(FieldValue).ToShortDateString();
+    }
+
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string ValErrorMessage = "Please provide the " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+}
+
+
+
+
+@{
+
+    if (bool.Parse(ViewData["Required"].ToString()))
+    {
+
+        <input @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") class="js-datepicker form-control" type="text" id="@FieldName" name="@FieldName" required title="@ValErrorMessage" value="@FieldValue" data-week-start="1" data-autoclose="true" data-today-highlight="true" data-date-format="m/d/yyyy" placeholder="mm/d/yyyy" />
+
+    }
+    else
+    {
+
+        <input class="js-datepicker form-control" type="text" id="@FieldName" name="@FieldName" title="@ValErrorMessage" value="@FieldValue" data-week-start="1" data-autoclose="true" data-today-highlight="true" data-date-format="m/d/yyyy" placeholder="m/d/yyyy" />
+    }
+
+}
+

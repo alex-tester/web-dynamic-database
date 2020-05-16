@@ -1,0 +1,303 @@
+﻿@using AutomationStandards.Models.CustomModels
+@using AutomationStandards.Models.DatabaseModels
+@model StandardConfigModel
+@{
+    List<SelectListItem> stdata = ((List<Standard>)ViewBag.stdata).Select(x => new SelectListItem { Text = x.StandardName, Value = x.StandardID.ToString() }).ToList();
+    List<SelectListItem> dataTypes = ((List<StandardDataType>)ViewBag.dataTypes).Select(x => new SelectListItem { Text = x.DataTypeName, Value = x.DataTypeID.ToString() }).ToList();
+}
+
+
+        <form id="frmEditor" class="js-validation" method="post">
+
+
+            @Html.HiddenFor(model => model.StandardID)
+            @Html.HiddenFor(model => model.StandardConfigID)
+
+
+            @Html.EditorFor(x => x.DisplayName, "_FieldEditor", "DisplayName", new { FieldType = "Textbox", FieldLabel = "Display Name", Required = true, showHelp = true, helpMessage = "No special characters allowed!", RegExp = "^[\\sa-zA-Z0-9_-]*", MaxLength = 150 })
+
+            @Html.EditorFor(x => x.FieldName, "_FieldEditor", "FieldName", new { FieldType = "Textbox", FieldLabel = "DB Column Name", Required = false, showHelp = true, helpMessage = "Field Name must not contain any spaces!", RegExp = "/^*$/", MaxLength = 150, FieldDisabled = true })
+
+            @Html.EditorFor(x => x.DataTypeID, "_FieldEditor", "DataTypeID", new { FieldType = "Dropdown", FieldLabel = "Data Type", Required = true, showHelp = false, helpMessage = "", List = dataTypes })
+
+            @Html.HiddenFor(model => model.VersionNumber)
+
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">
+                    @Html.CheckBoxFor(model => model.UseToolTip)
+                    <label for="UseToolTip">Use Tool Tip </label>
+                </div>
+            </div>
+        </div>*@
+
+            @Html.EditorFor(x => x.UseToolTip, "_FieldEditor", "UseToolTip", new { FieldType = "CheckBox", FieldLabel = "Use Help Message", showHelp = true, helpMessage = "Allows you to add a help message that is displayed, the same way you are seeing this help message!" })
+
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">
+                    <input class="form-control" type="text" name="ToolTip" id="ToolTip" placeholder="Enter Tool Tip" maxlength="250" value="@Model.ToolTip" />
+                    <label for="ToolTip">Tool Tip </label>
+                </div>
+            </div>
+        </div>*@
+
+            @*@Html.EditorFor(x => x.ToolTip, "_FieldEditor", "ToolTip", new { FieldType = "Textbox", FieldLabel = "Help Message", Required = false, showHelp = false, helpMessage = "", RegExp = "", MaxLength = 250 })*@
+
+            @Html.EditorFor(x => x.ToolTip, "_FieldEditor", "ToolTip", new { FieldType = "TextArea", FieldLabel = "Help Message", Required = false, MaxLength = 250, Rows = 2 })
+
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">
+                    @Html.CheckBoxFor(model => model.UseStandardData)
+                    <label for="UseStandardData">Use Standard Data </label>
+                </div>
+            </div>
+        </div>*@
+
+            @Html.EditorFor(x => x.UseStandardData, "_FieldEditor", "UseStandardData", new { FieldType = "CheckBox", FieldLabel = "Table Lookup", showHelp = true, helpMessage = "Allows you to populate this standard with data from another table - to prevent duplicate data entry efforts." })
+
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">
+                    @Html.CheckBoxFor(model => model.AllowMultiSelect)
+                    <label for="AllowMultiSelect">Allow Multiple Values </label>
+                </div>
+            </div>
+        </div>*@
+
+            @Html.EditorFor(x => x.AllowMultiSelect, "_FieldEditor", "AllowMultiSelect", new { FieldType = "CheckBox", FieldLabel = "Allow Multi-Select", showHelp = true, helpMessage = "Allows you to select multiple columns from the referenced standard lookup table" })
+
+            @Html.EditorFor(x => x.StandardLUID, "_FieldEditor", "StandardLUID", new { FieldType = "Dropdown", FieldLabel = "Standard LUID", Required = false, showHelp = true, helpMessage = "To populate this standard with data from another table, select the other table and field name here", List = stdata })
+
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">
+                    @{List<SelectListItem> stdata = new StandardModel().SelectAllStandardsDDL().ToList();}
+                    <select class="form-control js-select2" id="StandardLUID" name="StandardLUID" style="width:100%;">
+                        @foreach (SelectListItem item in stdata)
+                        {
+                            if (item.Value == (Model.StandardLUID == null ? "0" : Model.StandardLUID.ToString()))
+                            {
+                                <option value="@item.Value" selected="selected">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                    <label for="StandardLUID">Standard LookUp Table</label>
+                </div>
+            </div>
+        </div>*@
+            @Html.EditorFor(x => x.StandardLUValue, "_FieldEditor", "StandardLUValue", new { FieldType = "Dropdown", FieldLabel = "Field Lookup Column", Required = false, showHelp = true, helpMessage = "Column to use for this fields data options", List = dataTypes })
+            @*<div class="form-group">
+                <div class="col-sm-9">
+                    <div class="form-material form-material-primary">
+                       
+                        <select class="form-control " id="StandardLUValue" name="StandardLUValue"></select>
+                        <label for="StandardLUValue">Standard LookUp Value &nbsp&nbsp</label>
+                    </div>
+                </div>
+            </div>*@
+
+            @Html.EditorFor(x => x.StandardUseFilter, "_FieldEditor", "StandardUseFilter", new { FieldType = "CheckBox", FieldLabel = "Use SQL Filter", showHelp = true, helpMessage = "Allows you to define a custom SQL query to filter the results of the lookup table data." })
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">
+                    @Html.CheckBoxFor(model => model.StandardUseFilter)
+                    <label for="StandardUseFilter">Filter Standard DropDown </label>
+                </div>
+            </div>
+        </div>*@
+
+            @Html.EditorFor(x => x.StandardFilterSQL, "_FieldEditor", "StandardFilterSQL", new { FieldType = "TextArea", FieldLabel = "SQL Filter", Required = false, MaxLength = 500, Rows = 3 })
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">
+                    <textarea class="form-control" type="text" name="StandardFilterSQL" id="StandardFilterSQL" placeholder="Enter custom Standard Filter here" rows="3">@Model.StandardFilterSQL</textarea>
+                    <label for="StandardFilterSQL">Custom Standard Filter </label>
+                </div>
+            </div>
+        </div>*@
+
+            @Html.EditorFor(x => x.SortOrder, "_FieldEditor", "SortOrder", new { FieldType = "Number", FieldLabel = "Sort Order", Required = false, showHelp = true, helpMessage = "Order in which the value is returned", RegExp = "", MaxLength = 5 })
+
+
+        </form>
+
+        @*<script src="~/assets/js/pages/base_forms_wizard.js"></script>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#DisplayName").focus();
+            
+        initStandardConfigFields();
+        $('#FieldName').attr('placeholder', '');
+
+        //initStandardConfigFields();
+        
+        $("#DisplayName").on('keyup blur', function () {
+
+            var value = $('#DisplayName').val().split(' ').join('');
+            $("#FieldName").val(value);
+
+
+        });
+        
+        $('#UseToolTip').change(function () {
+           initStandardConfigFields();
+        }).change();
+        
+        $('#UseStandardData').change(function () {
+           initStandardConfigFields();
+        }).change();
+
+
+
+
+                //$('#UseToolTip').change(function () {
+        //    if ($("#UseToolTip").is(':checked')) {
+
+        //        $("#ToolTip").parent().parent().parent().show();
+
+        //    }
+        //    else {
+
+        //        $("#ToolTip").parent().parent().parent().hide();
+
+        //    }
+        //}).change();
+        
+        //$('#UseStandardData').change(function () {
+        //    if ($("#UseStandardData").is(':checked'))
+        //    {
+        //        $("#AllowMultiSelect").parent().parent().parent().show();
+        //        //$("#StandardLUID").parent().parent().parent().show();
+        //        $("#StandardLUID").parent().parent().show();
+        //        $("#StandardLUValue").parent().parent().parent().show();
+        //        $("#StandardUseFilter").parent().parent().parent().show();
+        //    }
+        //    else
+        //    {
+        //        $("#AllowMultiSelect").parent().parent().parent().hide();
+        //        //$("#StandardLUID").parent().parent().parent().hide();
+        //        $("#StandardLUID").parent().parent().hide();
+        //        $("#StandardLUValue").parent().parent().parent().hide();
+        //        $("#StandardUseFilter").parent().parent().parent().hide();
+        //    }
+        //}).change();
+        
+        $('#StandardLUID').change(function () {
+            if (this.value != 0) {
+                var action = '@Url.Action("StandardColumns","Manage")';
+                $.ajax({
+                    url: action + "?stdID=" + this.value,
+
+                    type: "GET",
+                    success: function (item) {
+
+                        $("#StandardLUValue").html(item).val('@Model.StandardLUValue');
+                    }
+
+                });
+            }
+        }).change();
+
+
+        //$('#StandardUseFilter').change(function () {
+        //    if ($("#StandardUseFilter").is(':checked')) {
+
+        //        $("#StandardFilterSQL").parent().parent().parent().show();
+
+        //    }
+        //    else {
+
+        //        $("#StandardFilterSQL").parent().parent().parent().hide();
+
+        //    }
+        //}).change();
+
+                $('#StandardUseFilter').change(function () {
+                    initStandardConfigFields();
+        }).change();
+
+
+        
+
+    });
+    $("#frmEditor").submit(function (e) {
+        e.preventDefault();
+    });
+
+    function initStandardConfigFields() {
+
+  
+        if ($("#UseToolTip").is(':checked')) {
+
+            //$("#ToolTip").show();
+            //fieldname, hidefield, clearfield
+            makeFieldRequired('ToolTip', true);
+            
+        }
+        else {
+
+            //$("#ToolTip").hide();
+            //fieldname, showfield
+            makeFieldNotRequired('ToolTip', true, true, true);
+
+        }
+
+
+
+        if ($("#UseStandardData").is(':checked')) {
+            //$("#AllowMultiSelect").show();
+            ////$("#StandardLUID").show();
+            //$("#StandardLUID").show();
+            //$("#StandardLUValue").show();
+            //$("#StandardUseFilter").show();
+            //makeFieldRequired('AllowMultiSelect', true);
+            makeFieldVisible('AllowMultiSelect');
+            //makeFieldVisible('AllowMultiSelect')
+            makeFieldRequired('StandardLUID', true);
+            makeFieldRequired('StandardLUValue', true);
+            //makeFieldRequired('StandardUseFilter', true)
+            makeFieldVisible('StandardUseFilter');
+            //makeFieldVisible('StandardUseFilter')
+        }
+        else {
+            //$("#AllowMultiSelect").hide();
+            ////$("#StandardLUID").hide();
+            //$("#StandardLUID").hide();
+            //$("#StandardLUValue").hide();
+            //$("#StandardUseFilter").hide();
+            makeFieldNotRequired('AllowMultiSelect', true, true, false);
+            makeFieldNotRequired('StandardLUID', true, true, false);
+            makeFieldNotRequired('StandardLUValue', true, true, false);
+            makeFieldNotRequired('StandardUseFilter', true, true, false);
+        }
+
+
+
+        if ($("#StandardUseFilter").is(':checked')) {
+
+            //$("#StandardFilterSQL").show();
+            makeFieldRequired('StandardFilterSQL', true);
+
+        }
+        else {
+
+            //$("#StandardFilterSQL").hide();
+            makeFieldNotRequired('StandardFilterSQL', true, true, false);
+
+        }
+
+        $('#frmEditor').show();
+
+        }
+
+
+
+
+</script>

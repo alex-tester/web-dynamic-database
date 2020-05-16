@@ -1,0 +1,277 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model StandardValueSingle
+
+@{
+    List<SelectListItem> BooleanList = new List<SelectListItem>();
+    BooleanList.Add(new SelectListItem() { Value = "False", Text = "False" });
+    BooleanList.Add(new SelectListItem() { Value = "True", Text = "True" });
+}
+
+
+
+        <form id="frmEditor" class="js-validation" method="post">
+
+
+            <input type="hidden" id="ID" name="ID" value="@Model.dtRow["ID"]" />
+            @Html.HiddenFor(model => model.StandardID)
+
+            @*@Html.EditorFor(x => x.dtRow["SortOrder"], "_FieldEditor", "SortOrder", new { FieldType = "Number", FieldLabel = "Sort Order", Required = true, showHelp = false, helpMessage = "", MaxLength = 4 })*@
+
+
+            @foreach (StandardConfigModel config in Model.Config.OrderBy(c => c.SortOrder))
+            {
+                if (config.UseStandardData)
+                {
+                    string AllowMultiple;
+                    List<string> dbvalue = new List<string>();
+
+                    if (config.AllowMultiSelect)
+                    {
+                        AllowMultiple = "multiple";
+                        dbvalue = Model.dtRow[config.FieldName].ToString().Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    }
+                    else
+                    {
+                        AllowMultiple = "";
+                        dbvalue.Add(Model.dtRow[config.FieldName].ToString());
+                    }
+
+                    List<SelectListItem> data = new List<SelectListItem>();
+                    if (config.StandardLUID == null || config.StandardLUValue == null)
+                    {
+
+                    }
+                    else
+                    {
+                        data = new StandardSQLManagement().GetStandardValueDDLCustomFilter(config.StandardLUID, config.StandardLUValue, config.StandardLUValue, config.StandardUseFilter, config.StandardFilterSQL);
+                    }
+
+
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <div class="form-material form-material-primary">
+                                <select class="form-control js-select2" @AllowMultiple id="@config.FieldName" name="@config.FieldName" style="width:100%;">
+                                    @if (config.AllowMultiSelect == false)
+                                    {
+                                        <option value="">Please Select One</option>
+                                    }
+                                    @foreach (SelectListItem item in data)
+                                    {
+                                        if (dbvalue.Contains(item.Text))
+                                        {
+                                            <option value="@item.Value" selected="selected">@item.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+
+
+                                </select>
+
+                                <label for="@config.FieldName">
+                                    @config.DisplayName s
+                                    @if (config.UseToolTip)
+                                    {
+                                        <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="top" tabindex="0" data-content="@config.ToolTip"></i>
+                                    }
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    switch (config.SQLDataType.ToUpper())
+                    {
+                        case "BIT":
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <div class="form-material form-material-primary">
+
+                                        <select class="form-control" id="@config.FieldName" name="@config.FieldName">
+                                            @foreach (SelectListItem item in BooleanList)
+                                            {
+                                                if (item.Value == Model.dtRow[config.FieldName].ToString())
+                                                {
+                                                    <option value="@item.Value" selected="selected">@item.Text</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            }
+                                        </select>
+                                        <label for="@config.FieldName">
+                                            @config.DisplayName
+                                            @if (config.UseToolTip)
+                                            {
+                                                <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="top" tabindex="0" data-content="@config.ToolTip"></i>
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            break;
+
+                        case "INT":
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <div class="form-material form-material-primary">
+                                        <input class="form-control" type="number" name="@config.FieldName" id="@config.FieldName" placeholder="Enter a @config.DisplayName" value="@Model.dtRow[config.FieldName]" />
+                                        <label for="@config.FieldName">
+                                            @config.DisplayName
+                                            @if (config.UseToolTip)
+                                            {
+                                                <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="top" tabindex="0" data-content="@config.ToolTip"></i>
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            break;
+
+                        case "DATETIME":
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <div class="form-material form-material-primary">
+                                        <input class="form-control" type="datetime" name="@config.FieldName" id="@config.FieldName" placeholder="Enter a @config.DisplayName" value="@Model.dtRow[config.FieldName]" />
+                                        <label for="@config.FieldName">
+                                            @config.DisplayName
+                                            @if (config.UseToolTip)
+                                            {
+                                                <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="top" tabindex="0" data-content="@config.ToolTip"></i>
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            break;
+
+                        default:
+                            string MaxLength = config.DataTypeName.Split('(', ')')[1];
+
+                            if (Convert.ToInt32(MaxLength) >= 500)
+                            {
+                                <div class="form-group">
+                                    <div class="col-sm-9">
+                                        <div class="form-material form-material-primary">
+                                            <textarea class="form-control" name="@config.FieldName" id="@config.FieldName" placeholder="Enter a @config.DisplayName" rows="5">@Model.dtRow[config.FieldName]</textarea>
+                                            <label for="@config.FieldName">
+                                                @config.DisplayName
+                                                @if (config.UseToolTip)
+                                                {
+                                                    <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="top" tabindex="0" data-content="@config.ToolTip"></i>
+                                                }
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <div class="col-sm-9">
+                                        <div class="form-material form-material-primary">
+                                            <input class="form-control" type="text" name="@config.FieldName" id="@config.FieldName" maxlength="@MaxLength" placeholder="Enter a @config.DisplayName" value="@Model.dtRow[config.FieldName]" />
+                                            <label for="@config.FieldName">
+                                                @config.DisplayName
+                                                @if (config.UseToolTip)
+                                                {
+                                                    <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="top" tabindex="0" data-content="@config.ToolTip"></i>
+                                                }
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            break;
+                    }
+                }
+
+            }
+
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <div class="form-material form-material-primary">
+                        <input class="form-control" type="number" name="SortOrder" id="SortOrder" required placeholder="Enter a SortOrder" value="@Model.dtRow["SortOrder"]" />
+                        <label for="SortOrder">Sort Order &nbsp&nbsp<i class="fa fa-asterisk text-primary"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <div class="form-material form-material-primary">
+
+                        <select class="form-control" id="Enabled" name="Enabled">
+                            @foreach (SelectListItem item in BooleanList)
+                            {
+                                if (item.Value == Model.dtRow["Enabled"].ToString())
+                                {
+                                    <option value="@item.Value" selected="selected">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                        <label for="Enabled">Enabled &nbsp&nbsp<i class="fa fa-asterisk text-primary"></i></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12">
+
+
+                    @{
+                        string ButtonValue;
+                        if (Model.dtRow["ID"].ToString() == "0")
+                        {
+                            ButtonValue = "Insert Value";
+                        }
+                        else
+                        {
+                            ButtonValue = "Update Value";
+                        }
+                    }
+
+
+
+                </div>
+            </div>
+
+
+        </form>
+
+        @*<script src="~/assets/js/pages/base_forms_wizard.js"></script>*@
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        //Make obs_datatable into a sortable table with datatable.js
+        //$('#obs_datatable').DataTable();
+
+        //jQuery(function () {
+        //    App.initHelpers(['select2', 'tags-inputs']);
+        //});
+
+        $("[data-toggle=popover]").popover();
+
+    });
+
+    $("#frmEditor").submit(function (e) {
+        e.preventDefault();
+    });
+
+
+
+</script>

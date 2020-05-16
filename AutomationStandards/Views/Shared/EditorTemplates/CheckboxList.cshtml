@@ -1,0 +1,52 @@
+﻿@model string
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    string ListWidth = ViewBag.ListWidth;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+
+
+    string ValErrorMessage = "Please provide the " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+    List<SelectListItem> selectList = ViewBag.List;
+    var valueList = FieldValue.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+}
+
+<div class="row">
+    @foreach (var item in selectList)
+    {
+    <div class="col-@ListWidth">
+        @if (valueList.Contains(item.Value))
+        {
+            <input @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") type="checkbox" id="@FieldName" name="@FieldName" value="@item.Value" checked />
+        }
+        else
+        {
+            <input @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") type="checkbox" id="@FieldName" name="@FieldName" value="@item.Value" />
+        }
+        @item.Text
+
+        @*<div class="custom-control custom-checkbox custom-control-primary">
+
+
+
+            @{
+
+                if (valueList.Contains(item.Value))
+                {
+                    <input type="checkbox" class="custom-control-input" id="@FieldName" name="@FieldName" checked title="@ValErrorMessage" value="@item.Value" />
+                }
+                else
+                {
+                    <input type="checkbox" class="custom-control-input" id="@FieldName" name="@FieldName" title="@ValErrorMessage" value="@item.Value" />
+                }
+                <label class="custom-control-label" for="@FieldName-@item.Value">@item.Text</label>
+            }
+        </div>*@
+    </div>
+    }
+</div>
+
+

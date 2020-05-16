@@ -1,0 +1,52 @@
+﻿@model object
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string RegExp = ViewBag.RegExp;
+    string ValErrorMessage = "Please provide a Valid " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+    int maxLength = Convert.ToInt32(ViewBag.MaxLength);
+    if (maxLength == 0)
+    {
+        maxLength = 50;
+    }
+
+}
+<link rel="stylesheet" href="@Url.Content("~/assets/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css")">
+<script src="@Url.Content("~/assets/js/plugins/moment/moment.min.js")"></script>
+<script src="@Url.Content("~/assets/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.js")"></script>
+
+@{
+
+    <div class="input-group">
+        <input @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") type="text" class="form-control" @(bool.Parse(ViewData["Required"].ToString()) ? "required" : "") id="@FieldName" name="@FieldName" placeholder="@Placeholder" title="@ValErrorMessage" maxlength="@maxLength" value="@FieldValue" data-always-show="true" data-placement="right" data-warning-class="badge badge-primary" data-limit-reached-class="badge badge-danger" />
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
+        </div>
+    </div>
+
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#@FieldName').datetimepicker({
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-crosshairs',
+                clear: 'fa fa-trash-o',
+                close: 'fa fa-times'
+            }
+        });
+
+    });
+
+</script>

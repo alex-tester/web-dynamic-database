@@ -1,0 +1,33 @@
+﻿@model object
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string RegExp = ViewBag.RegExp;
+    string ValErrorMessage = "Please provide a Valid " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+    int maxLength = Convert.ToInt32(ViewBag.MaxLength);
+    if (maxLength == 0)
+    {
+        maxLength = 50;
+    }
+
+    bool fieldHidden = ViewBag.HideField;
+    bool fieldReadOnly = ViewBag.ReadOnly;
+    bool Required = ViewBag.Required;
+}
+
+@{
+
+    @*if (bool.Parse(ViewData["Required"].ToString()))
+        {
+            <input class="js-maxlength form-control" type="text" id="@FieldName" name="@FieldName" required placeholder="@Placeholder" pattern="@ViewBag.RegExp" title="@ValErrorMessage" maxlength="@maxLength" value="@FieldValue" data-always-show="true" data-placement="right" data-warning-class="badge badge-primary" data-limit-reached-class="badge badge-danger" />
+        }
+        else
+        {
+            <input class="js-maxlength form-control" type="text" id="@FieldName" name="@FieldName" placeholder="@Placeholder" pattern="@ViewBag.RegExp" maxlength="@maxLength" title="@ValErrorMessage" value="@FieldValue" data-always-show="true" data-placement="right" data-warning-class="badge badge-primary" data-limit-reached-class="badge badge-danger" />
+        }*@
+    <input @(FieldDisabled ? "disabled" : "") @(fieldReadOnly ? "readonly" : "") class="js-maxlength form-control" type="text" id="@FieldName" name="@FieldName" @(Required ? "required" : "") placeholder="@Placeholder" pattern="@ViewBag.RegExp" title="@ValErrorMessage" maxlength="@maxLength" value="@FieldValue" data-always-show="true" data-placement="right" data-warning-class="badge badge-primary" data-limit-reached-class="badge badge-danger" />
+   
+}

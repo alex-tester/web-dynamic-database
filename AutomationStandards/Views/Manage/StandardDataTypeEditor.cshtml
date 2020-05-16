@@ -1,0 +1,32 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model StandardDataTypeModel
+
+
+
+        <form id="frmEditor" class="js-validation" method="post">
+
+
+            @Html.ValidationSummary(true)
+
+            @Html.HiddenFor(model => model.StandardDataTypeID)
+
+            @Html.EditorFor(x => x.StandardDataTypeName, "_FieldEditor", "StandardDataTypeName", new { FieldType = "Textbox", FieldLabel = "Data Type Name", Required = true, showHelp = false, helpMessage = "", RegExp = "", MaxLength = 50 })
+            @Html.EditorFor(x => x.SQLDataType, "_FieldEditor", "SQLDataType", new { FieldType = "Textbox", FieldLabel = "SQL Data Type", Required = true, showHelp = false, helpMessage = "", RegExp = "", MaxLength = 50 })
+
+
+
+
+        </form>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#StandardDataTypeName").focus();
+        initValidationHorizontal();
+    });
+    $("#frmEditor").submit(function (e) {
+        e.preventDefault();
+    });
+</script>

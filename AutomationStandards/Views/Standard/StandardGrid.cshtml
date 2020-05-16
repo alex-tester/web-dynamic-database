@@ -1,0 +1,160 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model List<StandardModel>
+@{
+    bool ShowManageButton = true;
+}
+
+    <div class="block" style="overflow-x:scroll;">
+
+        <!--Table header area-->
+
+        <div class="block-header">
+            <h3 class="block-title text-primary"><i class="fa fa-database"></i> Total Standards: @Model.Count</h3>
+            <div class="block-options">
+                @*<button type="button" class="btn btn-sm btn-outline-secondary" onclick="LoadPageBody('StandardGrid','Manage',false,0);"><i class="fa fa-backward"></i> Back</button>*@
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick='window.location="@Url.Action("Index","Home")"'><i class="fa fa-backward"></i> Home</button>
+                @if (ShowManageButton)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="ShowPopUpEditorDynamic('StandardEditor','Manage','0','Add Standard', 'ProcessStandardModel', 'Manage', 'StandardGrid', 'Standard', true, 'new');"><i class="fa fa-plus-square mr-1"></i>Add Standard Table</button>
+                }
+
+
+                <button class="btn btn-sm btn-outline-success" type="button" onclick="javascript: LoadPageBody('StandardGrid', 'Standard', false, 0);"><i class="si si-refresh"></i></button>
+                <div class="timeline-event-time block-options-item font-size-sm font-w600">
+
+                </div>
+            </div>
+        </div>
+
+
+        @*<div class="block-header">
+            <div class="col-md-6">
+                <div class="row">
+                    <h3>Total Standards: @Model.Count</h3>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+
+                    <div class="pull-right">
+                        <button class="btn btn-success" type="button" onclick="javascript: RefreshStandardGrid();"><i class="fa fa-refresh"></i></button>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>*@
+
+        <!--End table header area-->
+
+        <div class="block-content">
+
+            @*<table class="table table-bordered table-striped js-dataTable-full dataTable table-condensed" id="obs_datatable">*@
+            <table class="table table-bordered table-striped " id="obs_datatable" style="overflow-x:auto;">
+                <thead>
+                    <tr>
+
+                        <th>Standard Name</th>
+                        <th class="hidden-xs">TableName</th>
+                        <th class="hidden-md hidden-sm hidden-xs">Standard Description</th>
+                        <th>Count</th>
+                        <th>Standard Version</th>
+                        @*<th>placeholder</th>*@
+                        @*<th>tags</th>*@
+                        <th>Usage Count</th>
+                        <th style="width:150px;"></th>
+                    </tr>
+                </thead>
+                @*<tfoot class="standardhide">
+                    <tr>
+
+                        <th>Standard Name</th>
+                        <th class="hidden-xs">TableName</th>
+                        <th class="hidden-md hidden-sm hidden-xs">Standard Description</th>
+                        <th>Count</th>
+                        <th>Standard Version</th>
+                        <th>placeholder</th>
+                        <th>Usage Count</th>
+                        <th style="width:150px;"></th>
+                    </tr>
+                </tfoot>*@
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.StandardName</td>
+                            <td class="hidden-xs">@item.DBTableName</td>
+                            <td class="hidden-md hidden-sm hidden-xs">@item.StandardDefinition</td>
+                            <td class="text-center">@item.StandardCount</td>
+                            <td class="text-center">@item.VersionValue</td>
+                            @*<td class="text-center">placeholder</td>*@
+                            @*<td class="hidden-xs">@item.Tags</td>*@
+                            <td class="text-center">@item.UsageCount</td>
+                            <td class="text-center">
+                                @*<button class="btn btn-sm btn-outline-success" type="button" title="View @item.StandardName Values" onclick="javascript:LoadPageBody('StandardViewer','Standard',true,'@item.StandardName');"><i class="fa fa-list"></i> View Standard Values</button>*@
+                                <button class="btn btn-sm btn-outline-success" type="button" title="View @item.StandardName Values" onclick="location.href='@Url.Action("Viewer","Standard", new { id = item.DBTableName })'"><i class="fa fa-list"></i> View Standard Values</button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+<style>
+    .standardhide {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+
+    //Make obs_datatable into a sortable table with datatable.js
+
+    $("#obs_datatable").DataTable({
+        "bfilter": true,
+        "scrollCollapse": true,
+        "paging": false,
+        //"aaSorting": [],
+        //"bsort": true,
+        "columnDefs": [
+            {
+                //"targets": [7],
+                "visible": false,
+                "searchable": true
+            }],
+        stateSave: true
+
+    });
+
+
+    //$('#mcf_datatable tfoot th').each(function () {
+    //    var title = $(this).text();
+    //    $(this).html('<input type="text" class="colFilter" style="font-weight: bold;" placeholder="Search ' + title + '" />');
+    //});
+
+    //var Tablesearch = $('#mcf_datatable').DataTable();
+    //Tablesearch.columns().every(function () {
+
+    //    var that = this;
+    //    var buttonvalue = $("genrebutton").val();
+
+    //    $('.colFilter', this.footer()).on('keyup change', function () {
+    //        if (that.search() !== this.value) {
+    //            that
+    //                .search(this.value)
+
+    //                .draw();
+    //        }
+    //    });
+    //});
+
+
+</script>
