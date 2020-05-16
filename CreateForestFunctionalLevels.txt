@@ -1,0 +1,39 @@
+USE [{0}]
+
+
+/****** Object:  Table [dbo].[StForestFunctionalLevels]    Script Date: 4/28/2020 1:43:49 AM ******/
+SET ANSI_NULLS ON
+
+
+SET QUOTED_IDENTIFIER ON
+
+
+CREATE TABLE [dbo].[StForestFunctionalLevels](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[CreatedOn] [datetime] NULL,
+	[CreatedBy] [varchar](50) NULL,
+	[ModifiedOn] [datetime] NULL,
+	[ModifiedBy] [varchar](50) NULL,
+	[Enabled] [bit] NOT NULL,
+	[SortOrder] [int] NOT NULL,
+	[ForestFunctionalLevel] [varchar](250) NULL,
+ CONSTRAINT [PK_StForestFunctionalLevels] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+ALTER TABLE [dbo].[StForestFunctionalLevels] ADD  CONSTRAINT [DF_StForestFunctionalLevels_CreatedOn]  DEFAULT (getdate()) FOR [CreatedOn]
+
+
+ALTER TABLE [dbo].[StForestFunctionalLevels] ADD  CONSTRAINT [DF_StForestFunctionalLevels_ModifiedOn]  DEFAULT (getdate()) FOR [ModifiedOn]
+
+
+ALTER TABLE [dbo].[StForestFunctionalLevels] ADD  CONSTRAINT [DF_StForestFunctionalLevels_Enabled]  DEFAULT ((0)) FOR [Enabled]
+
+
+ALTER TABLE [dbo].[StForestFunctionalLevels] ADD  CONSTRAINT [DF_StForestFunctionalLevels_SortOrder]  DEFAULT ((0)) FOR [SortOrder]
+
+
+

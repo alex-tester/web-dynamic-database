@@ -1,0 +1,130 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model List<StandardModel>
+@{ 
+    var ShowManageButton = true;
+}
+
+    <div class="block block-bordered">
+
+        <!--Table header area-->
+        <div class="block-header">
+            <h3 class="block-title text-primary"><i class="fa fa-database"></i> Total Standards: @Model.Count</h3>
+            <div class="block-options">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick='window.location="@Url.Action("Index","Manage")"'><i class="fa fa-backward"></i> Back</button>
+                @if (ShowManageButton)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="ShowPopUpEditorDynamic('StandardEditor','Manage','0','Add Standard', 'ProcessStandardModel', 'Manage', 'StandardGrid', 'Manage', false, 0);"><i class="fa fa-plus-square mr-1"></i>Add Standard</button>
+                }
+
+
+                <button class="btn btn-sm btn-success" type="button" onclick="javascript: RefreshStandardGrid();"><i class="si si-refresh"></i></button>
+                <div class="timeline-event-time block-options-item font-size-sm font-w600">
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--End table header area-->
+
+        <div class="block-content">
+
+            <table class="table table-bordered table-striped js-dataTable-full dataTable table-condensed" id="obs_datatable">
+                <thead>
+                    <tr>
+
+                        <th>Standard Name</th>
+                        <th class="hidden-xs">TableName</th>
+                        <th class="hidden-md hidden-sm hidden-xs">Standard Description</th>
+                        <th class="hidden-md hidden-sm hidden-xs">Config Version</th>
+                        <th class="hidden-md hidden-sm hidden-xs">Value Version</th>
+                        @*<th class="hidden-md hidden-sm hidden-xs">Usage Count</th>*@
+                        <th style="width:325px;"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td class="font-w600">@item.StandardName</td>
+                            <td class="font-w600 hidden-xs">@item.DBTableName</td>
+                            <td class="font-w600 hidden-md hidden-sm hidden-xs">@item.StandardDefinition</td>
+                            <td class="font-w600 hidden-md hidden-sm hidden-xs">@item.VersionConfig</td>
+                            <td class="font-w600 hidden-md hidden-sm hidden-xs">@item.VersionValue</td>
+                            @*<td class="font-w600 hidden-md hidden-sm hidden-xs">@item.UsageCount</td>*@
+                        <td class="font-w600">
+
+                            <button class="btn btn-sm btn-outline-success" type="button" onclick="javascript:LoadPageBody('StandardConfigGrid','Manage',true,@item.StandardID);"><i class="fa fa-list"></i> Fields</button>
+
+                            <button class="btn btn-sm btn-outline-info" type="button" onclick="javascript:ShowPopUpEditorDynamic('StandardEditor','Manage',@item.StandardID,'Edit Standard', 'ProcessStandardModel', 'Manage', 'StandardGrid', 'Manage', false, 0);"><i class="fa fa-edit"></i>Table</button>
+                            
+                            <button class="btn btn-sm btn-danger"  type="button" onclick='javascript:ShowPopUpDelete("DeleteStandardModel", "Manage", "@item.StandardID", "Standard Table", "Standard", false, "0")'><i class="fa fa-trash"></i></button>
+                            @*<button class="btn btn-sm btn-danger" title="Delete @item.StandardName Standard" data-toggle="modal" data-objectname="@item.StandardName" data-id="@item.StandardID" data-target="#DeleteConfirmation"><i class="fa fa-trash"></i></button>*@
+
+                        </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="DeleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog-slideup">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary-dark text-white">
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                    </div>
+                    <div class="modal-body center">
+                        Are you sure you want to delete the Standard <strong><label id="DeleteObjectName"></label></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" name="delConfirm" id="delConfirm">Delete Standard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#div_PageNameHeader").html("Manage Standard Tables");
+        document.title = "Standards - " +  "Manage Standards Framework";
+
+        $("#obs_datatable").dataTable( {
+            //"columns": [
+            //    null,
+            //    null,
+            //    null,
+            //  { "width": "325" }
+            //],
+            stateSave: true
+        } );
+    });
+
+    $(document).on("click", ".open-DeleteConfirmation", function () {
+        var StandardID = $(this).data('id');
+        var StandardName = $(this).data('objectname');
+
+        $(".modal-body #DeleteObjectName").text(StandardName);
+
+        $(".modal-footer #delConfirm").unbind("click");
+
+        $(".modal-footer #delConfirm").click(function () {
+            $("#DeleteConfirmation").modal('hide');
+            $(".modal-backdrop").remove();
+            DeleteStandard(StandardID);
+        });
+    });
+
+
+
+</script>

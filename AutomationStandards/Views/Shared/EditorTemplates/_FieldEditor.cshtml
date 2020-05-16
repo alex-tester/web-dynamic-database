@@ -1,0 +1,117 @@
+﻿@model object
+
+@{
+    string FieldValue = Model == null ? "" : Model.ToString();
+    string DisplayValue = ViewBag.DisplayValue;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    string FieldLabel = ViewBag.FieldLabel;
+    string FieldType = ViewBag.FieldType;
+    bool isRequired = ViewBag.Required ?? false;
+
+    string labelWidth = ViewBag.LabelWidth ?? "4";
+    string fieldWidth = ViewBag.FieldWidth ?? "7";
+    string listWidth = ViewBag.ListWidth ?? "3";
+
+    bool showHelp = ViewBag.showHelp ?? false;
+    string helpMessage = ViewBag.helpMessage;
+    bool fieldHidden = ViewBag.HideField ?? false;
+    bool fieldDisabled = ViewBag.FieldDisabled ?? false;
+    bool fieldReadOnly = ViewBag.ReadOnly ?? false;
+}
+
+
+
+<div class="form-group row" id="div_@FieldName" style="@(bool.Parse(fieldHidden.ToString()) ? "display: none" : "")">
+
+    <label class="col-sm-@labelWidth col-form-label" for=@FieldName>
+
+        @FieldLabel &nbsp&nbsp<i id="req_@FieldName" class="fa fa-xs fa-asterisk text-primary" style="@(isRequired ? "" : "display: none;")"></i>
+        <span>&nbsp;&nbsp;</span><i id="help_@FieldName" style="@(bool.Parse(showHelp.ToString()) ? "" : "display: none;")" class="fa fa-xs fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(helpMessage)"></i>
+    </label>
+
+    @*@if (isRequired)
+        {
+            <label class="col-sm-@labelWidth col-form-label" for=@FieldName style="@(bool.Parse(fieldHidden.ToString()) ? "display: none" : "")">
+                @FieldLabel &nbsp&nbsp<i id="req_@FieldName" class="fa fa-xs fa-asterisk text-primary"></i>@if (showHelp)
+                {
+                    <span>&nbsp;&nbsp;</span><i id="help_@FieldName" class="fa fa-xs fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(helpMessage)"></i>
+                }
+                else
+                {
+                    <span>&nbsp;&nbsp;</span><i id="help_@FieldName" style="display:none;" class="fa fa-xs fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(helpMessage)"></i>
+                }
+            </label>
+        }
+        else
+        {
+            <label class="col-sm-@labelWidth col-form-label" for=@FieldName style="@(bool.Parse(fieldHidden.ToString()) ? "display: none" : "")">
+                @FieldLabel &nbsp&nbsp<i id="req_@FieldName" class="fa fa-xs fa-asterisk text-primary" style="display:none;"></i>
+                @if (showHelp)
+                {
+                    <span>&nbsp;&nbsp;</span><i id="help_@FieldName" class="fa fa-xs fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(helpMessage)"></i>
+                }
+                else
+                {
+                    <span>&nbsp;&nbsp;</span><i id="help_@FieldName" style="display:none;" class="fa fa-xs fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="hover" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(helpMessage)"></i>
+                }
+            </label>
+        }*@
+
+
+
+
+
+    <div class="col-sm-@fieldWidth">
+        @*@if (FieldType == "CheckBox")
+            {
+                bool cbValue = Convert.ToBoolean(FieldValue);
+                @Html.CheckBoxFor(x => cbValue)
+            }
+            else
+            {*@
+
+        @if (FieldType == "Textbox" && FieldValue == "")
+        {
+            string t = "stophere";
+        }
+
+
+
+        @*@if (FieldValue == "")
+            {
+                @Html.EditorFor(x => FieldValue , FieldType, FieldName, new { Value = FieldValue, Name = FieldName, Title = FieldLabel, Required = isRequired, RegExp = ViewBag.RegExp, MaxLength = ViewBag.MaxLength, ListWidth = listWidth, Rows = ViewBag.Rows, List = ViewBag.List })
+
+            }
+            else
+            {
+                @Html.Editor(FieldValue, FieldType, FieldName, new { Value = FieldValue, Name = FieldName, Title = FieldLabel, Required = isRequired, RegExp = ViewBag.RegExp, MaxLength = ViewBag.MaxLength, ListWidth = listWidth, Rows = ViewBag.Rows, List = ViewBag.List })
+            }*@
+
+        @{
+            ViewBag.Value = FieldValue;
+            ViewBag.DisplayValue = DisplayValue;
+            ViewBag.Name = FieldName;
+            ViewBag.Title = FieldLabel;
+            ViewBag.Required = isRequired;
+            ViewBag.RegExp = ViewBag.RegExp;
+            ViewBag.MaxLength = ViewBag.MaxLength;
+            ViewBag.ListWidth = listWidth;
+            ViewBag.Rows = ViewBag.Rows;
+            ViewBag.List = ViewBag.List;
+            ViewBag.HideField = fieldHidden;
+            ViewBag.FieldDisabled = fieldDisabled;
+            ViewBag.ReadOnly = fieldReadOnly;
+        }
+        @{Html.RenderPartial("~/Views/Shared/EditorTemplates/" + FieldType + ".cshtml", FieldValue);}
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        jQuery(function () { One.helpers(['datepicker', 'maxlength', 'select2']); });
+        $('[data-toggle="popover"]').popover();
+
+    });
+</script>

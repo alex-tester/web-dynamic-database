@@ -1,0 +1,18 @@
+﻿@*@model webServerInventoryDatabase.Models.DatabaseModels.CheckListResults
+
+<td hidden>
+
+    @Html.HiddenFor(x => x.Id)
+</td>
+<td>
+    @Model.CheckListQuestion.CheckListQuestionText
+</td>
+
+@Html.EditorFor(x => x.Answer, "_TableEditor", "Answer", new { FieldLabel = "Answer", FieldType = "Checkbox", Required = false, UseList = true, CenterText = true })
+
+
+
+
+
+@Html.EditorFor(x => x.Comments, "_TableEditor", "Comments", new { FieldLabel = "Comments", FieldType = "TextArea", Required = false, Rows = "5", MaxLength = 9999, UseList = true })*@
+

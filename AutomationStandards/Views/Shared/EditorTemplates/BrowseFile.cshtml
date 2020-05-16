@@ -1,0 +1,58 @@
+﻿@model object
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string RegExp = ViewBag.RegExp;
+    string ValErrorMessage = "Please provide a Valid " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+    int maxLength = Convert.ToInt32(ViewBag.MaxLength);
+    if (maxLength == 0)
+    {
+        maxLength = 50;
+    }
+
+}
+
+@{
+
+        <div class="input-group">
+            <label class="input-group-btn btn-sm">
+                <span class="btn btn-sm btn btn-sm-outline-primary">
+                    Browse&hellip; <input type="file" id="@FieldName" name="@FieldName" @(bool.Parse(ViewData["Required"].ToString()) ? "required" : "") style="display: none;">
+                </span>
+            </label>
+            <input @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") type="text" class="form-control" readonly>
+        </div>
+
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        $(':file').on('fileselect', function (event, numFiles, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+                log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+            if (input.length) {
+                input.val(log);
+            } else {
+                if (log) alert(log);
+            }
+
+        });
+
+        // We can attach the `fileselect` event to all file inputs on the page
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+    });
+
+</script>

@@ -1,0 +1,63 @@
+﻿@model object
+
+@{
+    string FieldValue = Model == null ? "" : Model.ToString();
+    string DisplayValue = ViewBag.DisplayValue;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    string FieldLabel = ViewBag.FieldLabel;
+    string FieldType = ViewBag.FieldType;
+    bool isRequired = ViewBag.Required ?? false;
+    //keeps the [index] in field value if the item is in list
+    bool UseList = ViewBag.UseList ?? false;
+
+    string labelWidth = ViewBag.LabelWidth ?? "3";
+    string fieldWidth = ViewBag.FieldWidth ?? "7";
+    string listWidth = ViewBag.ListWidth ?? "3";
+
+    bool showHelp = ViewBag.showHelp ?? false;
+    string helpMessage = ViewBag.helpMessage;
+    bool fieldHidden = ViewBag.HideField ?? false;
+    bool fieldDisabled = ViewBag.FieldDisabled ?? false;
+
+
+    //NEW OPTIONS
+    bool centerText = ViewBag.CenterText ?? false;
+}
+
+
+
+        @if (FieldType == "Textbox" && FieldValue == "")
+        {
+            string t = "stophere";
+        }
+
+
+        @{
+            ViewBag.Value = FieldValue;
+            ViewBag.DisplayValue = DisplayValue;
+            ViewBag.Name = FieldName;
+            ViewBag.Title = FieldLabel;
+            ViewBag.Required = isRequired;
+            ViewBag.RegExp = ViewBag.RegExp;
+            ViewBag.MaxLength = ViewBag.MaxLength;
+            ViewBag.ListWidth = listWidth;
+            ViewBag.Rows = ViewBag.Rows;
+            ViewBag.List = ViewBag.List;
+            ViewBag.HideField = fieldHidden;
+            ViewBag.FieldDisabled = fieldDisabled;
+            ViewBag.UseList = UseList;
+        }
+
+<td class="@(bool.Parse(centerText.ToString()) ? "text-center" : "")">
+        @{Html.RenderPartial("~/Views/Shared/EditorTemplates/" + FieldType + ".cshtml", FieldValue);}
+    </td>
+
+
+
+<script>
+    $(document).ready(function () {
+        jQuery(function () { One.helpers(['datepicker', 'maxlength', 'select2']); });
+        $('[data-toggle="popover"]').popover();
+
+    });
+</script>

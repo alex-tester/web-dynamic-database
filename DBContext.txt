@@ -1,0 +1,9 @@
+Replace onconfiguring method in automationstandardscontext with this _ connectionstring property
+public static string ConnectionString { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(ConnectionString);
+        }
+
+scaffold
+scaffold-dbcontext -Connection "Server=SQL03.observicing.net;Database=AutomationStandards;Trusted_Connection=true;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models/DatabaseModels -UseDatabaseNames -force

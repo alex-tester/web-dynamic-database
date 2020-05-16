@@ -1,0 +1,72 @@
+﻿@model string
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string ValErrorMessage = "Please provide the " + ViewBag.Title;
+    string Placeholder = "Please select the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+    List<SelectListItem> selectList = ViewBag.List;
+
+}
+
+
+
+
+@{
+
+    <select class="form-control js-select2" id="@FieldName" name="@FieldName" @(bool.Parse(ViewData["Required"].ToString()) ? "required" : "") data-placeholder="@Placeholder">
+        <option></option>
+        @foreach (var item in selectList)
+        {
+            if (item.Value == FieldValue.ToString())
+            {
+                <option value="@item.Value" selected="selected">@item.Text</option>
+            }
+            else
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        }
+    </select>
+
+    @*if (bool.Parse(ViewData["Required"].ToString()))
+        {
+
+            <select class="form-control js-select2" id="@FieldName" name="@FieldName" required data-placeholder="@Placeholder">
+                <option></option>
+                @foreach (var item in selectList)
+                {
+                    if (item.Value == FieldValue.ToString())
+                    {
+                        <option value="@item.Value" selected="selected">@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+
+        }
+        else
+        {
+
+            <select class="form-control js-select2" id="@FieldName" name="@FieldName" data-placeholder="@Placeholder">
+                <option></option>
+                @foreach (var item in selectList)
+                {
+                    if (item.Value == FieldValue.ToString())
+                    {
+                        <option value="@item.Value" selected="selected">@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        }*@
+
+}
+

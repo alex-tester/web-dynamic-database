@@ -1,0 +1,52 @@
+﻿@model string
+
+@{
+    string FieldValue = Model;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    string FieldLabel = ViewBag.FieldLabel;
+    string FieldType = ViewBag.FieldType;
+    bool isRequired = ViewBag.Required;
+
+    string labelWidth = ViewBag.LabelWidth ?? "3";
+    string fieldWidth = ViewBag.FieldWidth ?? "7";
+
+    bool showHelp = ViewBag.showHelp ?? false;
+    string helpMessage = ViewBag.helpMessage;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+}
+
+
+
+<div class="form-group row">
+
+    @if (isRequired)
+    {
+        <label class="col-sm-@labelWidth col-form-label" for=@FieldName>
+            @FieldLabel &nbsp&nbsp<i id="req_@FieldName" class="fa fa-asterisk text-primary"></i>
+            @if (showHelp)
+            {
+                <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="click" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(helpMessage)"></i>
+            }
+        </label>
+    }
+    else
+    {
+        <label class="col-sm-@labelWidth col-form-label" for=@FieldName>
+            @FieldLabel &nbsp&nbsp<i id="req_@FieldName" class="fa fa-asterisk text-primary" style="display:none;"></i>
+            @if (showHelp)
+            {
+                <span>&nbsp;&nbsp;</span><i class="fa fa-question-circle text-black obs-info-icon" data-toggle="popover" data-trigger="click" data-placement="right" data-html="true" data-animation="true" data-content="@Html.Raw(helpMessage)"></i>
+            }
+        </label>
+    }
+
+
+
+        <div class="col-sm-@fieldWidth">
+            @Html.Editor(Model, FieldType, FieldName, new { Value = FieldValue, Title = FieldLabel, Required = isRequired, RegExp = ViewBag.RegExp, MaxLength = ViewBag.MaxLength, List = ViewBag.List })
+
+            @*@Html.Editor(Model, "TextBox", "applicationName", new { Value = FieldValue,  Title = "option2", Required = false, RegExp = "", MaxLength = 50 })
+
+            @Html.EditorForModel("TextBox","applicationName", new { Title = "option3", Required = false, RegExp = "", MaxLength = 50 })*@
+        </div>
+</div>

@@ -1,0 +1,116 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+
+
+
+.loadingModal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba( 255, 255, 255, .8 )
+    /*url('../img/cc_bug.gif')*/
+    50% 50% no-repeat;
+}
+
+body.loading {
+    overflow: hidden;
+}
+
+    body.loading .loadingModal {
+        display: block;
+    }
+
+
+
+
+.breadcrumb-select {
+    background: transparent;
+    border: none;
+    color: #5c80d1;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.tbl-horizontal-header {
+    width: 200px;
+}
+
+.obs-info-icon {
+    transition: ease-out 0.2s;
+    cursor: pointer;
+}
+
+.ui-autocomplete {
+    max-height: 300px;    
+    overflow-y: auto;   /* prevent horizontal scrollbar */    
+    overflow-x: hidden; /* add padding to account for vertical scrollbar */
+    z-index: 10000 !important;
+}
+
+.ui-state-hover {
+    /*background: #5c80d1!important;*/
+    background: red !important;
+}
+
+.ui.ui-autocomplete .ui-state-active {
+    /*background: #5c80d1!important;*/
+    background: red !important;
+}
+
+.ui-menu-item {
+    font-size: .875rem
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+	border: 1px solid #003eff;
+	background: #5c80d1;
+	font-weight: normal;
+	color: #ffffff;
+}
+
+

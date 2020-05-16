@@ -1,0 +1,4 @@
+CreatedOn,CreatedBy,ModifiedOn,ModifiedBy,Enabled,SortOrder,DomainShortName,DomainLongName,ForestFunctionalLevel
+34:41.0,atester,34:41.2,atester,1,1,obs,obs.ad.observicing.net,Windows Server 2016
+34:41.0,atester,34:41.2,atester,1,1,ct,contoso.local,Windows Server 2012R2
+34:41.0,atester,34:41.2,atester,1,1,msft,msft.microsoft.com,Windows Server 2016

@@ -1,0 +1,15 @@
+﻿@model String
+@{ 
+    string mailSubject = ViewBag.Subject;
+    string mailBody = ViewBag.Body;
+    string mailCC = ViewBag.CC;
+    string mailBCC = ViewBag.BCC;
+    string Text = ViewBag.Text;
+}
+@if (!string.IsNullOrWhiteSpace(Model))
+{
+
+    mailSubject = mailSubject.Replace(" ", "%20").Replace("\r", "%0D%0A").Replace("\n", "%0D%0A").Replace("?", "%3F").Replace("/", "%2F").Replace(":", "%3A");
+    mailBody = mailBody.Replace(" ", "%20").Replace("\r", "%0D").Replace("\n", "%0A").Replace("?", "%3F").Replace("/", "%2F").Replace(":", "%3A");
+    <a href="mailto:@Model?subject=@mailSubject&body=@mailBody">@Text</a>
+}

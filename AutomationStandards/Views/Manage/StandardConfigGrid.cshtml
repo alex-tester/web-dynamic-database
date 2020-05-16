@@ -1,0 +1,148 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model List<StandardConfigModel>
+@{ 
+    var ShowManageButton = true;
+}
+
+    <div class="block">
+
+        <!--Table header area-->
+        <div class="block-header">
+            <h3 class="block-title text-primary"><i class="fa fa-database"></i> @ViewBag.StandardName - Fields: @Model.Count</h3>
+            <div class="block-options">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="LoadPageBody('StandardGrid','Manage',false,0);"><i class="fa fa-backward"></i> Back</button>
+                @if (ShowManageButton)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="ShowPopUpEditorDynamic('StandardConfigEditor','Manage','0','Add Standard Field', 'ProcessStandardConfigModel', 'Manage', 'StandardConfigGrid', 'Manage', true, @ViewBag.StandardID);"><i class="fa fa-plus-square mr-1"></i>Add Field</button>
+                }
+
+
+                <button class="btn btn-sm btn-outline-success" type="button" onclick="javascript: RefreshStandardConfigGrid('@ViewBag.StandardID');"><i class="si si-refresh"></i></button>
+                <div class="timeline-event-time block-options-item font-size-sm font-w600">
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--End table header area-->
+
+
+        <div class="block-content table-responsive">
+
+            <table class="table table-bordered table-striped  js-dataTable-full dataTable table-condensed  table-responsive" id="obs_datatable">
+                <thead>
+                    <tr>
+                        <th>Sort Order</th>
+                        <th>Field Name</th>
+                        <th>Display Name</th>
+                        <th class="hidden-sm hidden-xs">Data Type</th>
+                        <th class="hidden-sm hidden-xs">Version Number</th>
+                        <th style="width:150px;"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.OrderBy(m => m.SortOrder))
+                    {
+                        <tr id="RowID-@(item.StandardConfigID)">
+
+                            <td class="font-w600">@item.SortOrder</td>
+                            <td class="font-w600">@item.FieldName</td>
+                            <td class="font-w600">@item.DisplayName</td>
+                            <td class="font-w600 hidden-sm hidden-xs">@item.DataTypeName</td>
+                            <td class="font-w600 hidden-sm hidden-xs">@item.VersionNumber</td>
+                            <td class="font-w600">
+                                <button class="btn btn-sm btn-outline-info" type="button" onclick="javascript: ShowPopUpEditorDynamic('StandardConfigEditor', 'Manage', @item.StandardConfigID, 'Edit Standard Field', 'ProcessStandardConfigModel', 'Manage', 'StandardConfigGrid', 'Manage', true, @ViewBag.StandardID);"><i class="fa fa-edit"></i></button>
+                                @*<button class="open-DeleteConfirmation btn btn-sm btn-danger" title="Delete @item.FieldName Category Config" data-toggle="modal" data-objectname="@item.FieldName" data-id="@item.StandardConfigID" data-stdid="@item.StandardID" data-target="#DeleteConfirmation"><i class="fa fa-trash"></i></button>*@
+                                <button class="btn btn-sm btn-danger" type="button" onclick='javascript:ShowPopUpDelete("DeleteStandardConfigModel", "Manage", "@item.StandardConfigID", "@item.FieldName as a Standard Field", "StandardConfigGrid", true, "@item.StandardID")'><i class="fa fa-trash"></i></button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="DeleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog-slideup">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary-dark text-white">
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                    </div>
+                    <div class="modal-body center">
+                        Are you sure you want to delete the Standard Configuration <strong><label id="DeleteObjectName"></label></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" name="delConfirm" id="delConfirm">Delete Category</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        highlightNavMenu("Manage");
+        $("#div_PageNameHeader").html("Manage Standard Fields");
+        document.title = "Standard Configuration - " +  "Manage Framework";
+
+        var tbl = $("#obs_datatable").DataTable({
+            
+            rowReorder: true
+        });
+
+
+        tbl.on('row-reorder', function (e, diff, edit) {
+
+            var trs = $("#obs_datatable").find("tbody>tr");
+            var hashtable = {};
+
+            for (var i = 0; i < trs.length ; i++) {
+                hashtable[trs[i].id] = i + 1;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("UpdateStandardConfigSortOrder", "Manage")',
+                data: { data: hashtable }, // serializes the form's elements.
+                success: function (result) {
+
+                    RefreshStandardConfigGrid('@ViewBag.StandardID');
+
+                },
+                failure: function (result) {
+                    alert(result);
+                }
+            })
+
+
+        });
+    });
+
+    $(document).on("click", ".open-DeleteConfirmation", function () {
+        var StandardConfigID = $(this).data('id');
+        var Standardid = $(this).data('stdid');
+        var StandardConfigName = $(this).data('objetname');
+
+        $(".modal-body #DeleteObjectName").text(StandardConfigName);
+
+        $(".modal-footer #delConfirm").unbind("click");
+
+        $(".modal-footer #delConfirm").click(function () {
+            $("#DeleteConfirmation").modal('hide');
+            $(".modal-backdrop").remove();
+            DeleteStandardConfig(StandardConfigID, Standardid);
+        });
+    });
+
+
+
+</script>

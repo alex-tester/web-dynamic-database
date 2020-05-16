@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/Shared/_ManageLayout.cshtml";
+    ViewBag.Title = "Manage Standard";
+}
+
+
+<div class="block block-bordered">
+
+    <div id="divGrid"></div>
+
+</div>
+
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        highlightNavMenu("Manage");
+        $("#div_PageNameHeader").html("Manage Standard Tables");
+        //$("#div_PageDescriptionHeader").html("Create and define the fields of Standard Tables");
+        RefreshStandardGrid();
+});
+
+
+
+</script>

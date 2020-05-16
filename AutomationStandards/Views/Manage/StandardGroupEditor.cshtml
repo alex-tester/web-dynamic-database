@@ -1,0 +1,40 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model StandardGroupModel
+
+
+
+        @*<form id="frmEditor" class="js-form2 js-validation-material form-horizontal push-10-t" method="post">*@
+        <form id="frmEditor" class="js-validation" method="post">
+
+            @Html.HiddenFor(model => model.StandardGroupID)
+
+            @*<div class="form-group">
+            <div class="col-sm-9">
+                <div class="form-material form-material-primary">*@
+            @*<input class="form-control" type="text" name="StandardGroupName" id="StandardGroupName" required placeholder="Enter a StandardGroup Name" maxlength="50" value="@Model.StandardGroupName" />*@
+
+            @Html.EditorFor(x => x.StandardGroupName, "_FieldEditor", "StandardGroupName", new { FieldType = "Textbox", FieldLabel = "Standard Group Name", Required = true, showHelp = false, helpMessage = "", RegExp = "", MaxLength = 50 })
+  
+        @*<label for="StandardGroupName">Standard Group Name &nbsp&nbsp<i class="fa fa-asterisk text-primary"></i></label>*@
+        @*</div>
+            </div>
+        </div>*@
+
+
+
+
+        </form>
+
+        @*<script src="~/assets/js/pages/base_forms_wizard.js"></script>*@
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#StandardGroupName").focus();
+        initValidationHorizontal();
+    });
+    $("#frmEditor").submit(function (e) {
+        e.preventDefault();
+    });
+</script>

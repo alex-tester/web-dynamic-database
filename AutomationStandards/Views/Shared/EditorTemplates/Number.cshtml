@@ -1,0 +1,25 @@
+﻿@model string
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string ValErrorMessage = "Please provide the " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+    bool fieldReadOnly = ViewBag.ReadOnly;
+    bool Required = ViewBag.Required;
+
+    int maxLength = Convert.ToInt32(ViewData["MaxLength"]);
+    if (maxLength == 0)
+    {
+        maxLength = 50;
+    }
+}
+
+
+
+
+@{
+
+
+    <input @(FieldDisabled ? "disabled" : "") @(fieldReadOnly ? "readonly" : "") class="form-control" type="number" id="@FieldName" name="@FieldName" @(Required ? "required" : "") placeholder="@Placeholder" title="@ValErrorMessage" maxlength="@maxLength" value="@FieldValue" />
+}

@@ -1,0 +1,118 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model List<StandardDataTypeModel>
+@{ 
+    bool ShowManageButton = true;
+}
+
+    <div class="block">
+
+        <!--Table header area-->
+        <div class="block-header">
+            <h3 class="block-title text-primary"><i class="fa fa-database"></i> Total Standard Date Types: @Model.Count</h3>
+            <div class="block-options">
+                @*<button type="button" class="btn btn-sm btn-outline-secondary" onclick="LoadPageBody('StandardGrid','Manage',false,0);"><i class="fa fa-backward"></i> Back</button>*@
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick='window.location="@Url.Action("Index","Manage")"'><i class="fa fa-backward"></i> Back</button>
+                @if (ShowManageButton)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="ShowPopUpEditorDynamic('StandardDataTypeEditor','Manage','0','Add Standard DataType', 'ProcessStandardDataTypeModel', 'Manage', 'StandardDataTypeGrid', 'Manage', false,'0');"><i class="fa fa-plus-square mr-1"></i>Add Data Type</button>
+                }
+
+
+                <button class="btn btn-sm btn-outline-success" type="button" onclick="javascript: RefreshStandardDataTypeGrid();"><i class="si si-refresh"></i></button>
+                <div class="timeline-event-time block-options-item font-size-sm font-w600">
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--End table header area-->
+
+        <div class="block-content" style="overflow-x:auto;">
+
+            <table class="table table-bordered table-striped js-dataTable-full dataTable table-condensed  table-responsive" id="obs_datatable">
+                <thead>
+                    <tr>
+
+                        <th>Data Type Name</th>
+                        <th>SQL Data Type</th>
+                        <th style="width:125px;"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td class="font-w600">@item.StandardDataTypeName</td>
+                            <td class="font-w600">@item.SQLDataType</td>
+                            <td class="font-w600">
+                                @*<button class="btn btn-sm btn-outline-info" type="button" title="Edit @item.StandardDataTypeName Data Type" onclick="javascript:ShowStandardDataTypeEditor('@item.StandardDataTypeID');"><i class="fa fa-pencil"></i></button>*@
+                                @*<button class="open-DeleteConfirmation btn btn-danger" title="Delete @item.StandardDataTypeName Data Type" data-toggle="modal" data-objectname="@item.StandardDataTypeName" data-id="@item.StandardDataTypeID" data-target="#DeleteConfirmation"><i class="fa fa-trash"></i></button>*@
+                                <button class="btn btn-sm btn-danger" type="button" onclick='javascript:ShowPopUpDelete("DeleteStandardDataTypeModel", "Manage", "@item.StandardDataTypeID", "@item.StandardDataTypeName as a Data Type", "StandardDataTypeGrid", false, "0")'><i class="fa fa-trash"></i></button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="DeleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog-slideup">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary-dark text-white">
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                    </div>
+                    <div class="modal-body center">
+                        Are you sure you want to delete the Standard Data Type <strong><label id="DeleteObjectName"></label></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" name="delConfirm" id="delConfirm">Delete Standard Data Type</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        document.title = "Standards Data Type";
+                 highlightNavMenu("Manage");
+        $("#div_PageNameHeader").html("Manage Standards Data Types");
+
+        $("#obs_datatable").dataTable( {
+            //"columns": [
+            //    null,
+            //    null,
+            //  { "width": "150" }
+            //],
+            stateSave: true
+        } );
+    });
+
+    $(document).on("click", ".open-DeleteConfirmation", function () {
+        var StandardDataTypeID = $(this).data('id');
+        var StandardDataTypeName = $(this).data('objectname');
+
+        $(".modal-body #DeleteObjectName").text(StandardDataTypeName);
+
+        $(".modal-footer #delConfirm").unbind("click");
+
+        $(".modal-footer #delConfirm").click(function () {
+            $("#DeleteConfirmation").modal('hide');
+            $(".modal-backdrop").remove();
+            DeleteStandardDataType(StandardDataTypeID);
+        });
+    });
+
+
+
+</script>

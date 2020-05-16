@@ -1,0 +1,3 @@
+StandardGroupID,DBTableName,StandardName,StandardDefinition,ManageRoles,VersionConfig,VersionValue,Tags,NotifiyOwner,OwnerEmail,ViewerRoles,UsageCount,CreatedOn,CreatedBy,ModifiedOn,ModifiedBy
+2,StForestFunctionalLevels,Forest Functional Levels,Active Directory Forest Functional Levels,Admin,1,8,NULL,0,NULL,Admin,1024,39:49.7,atester,39:49.7,atester
+2,StActiveDirectoryDomains,Active Directory Domains,AD Domains managed by this organization,Admin,1,4,NULL,0,NULL,Admin,2048,41:21.9,atester,41:21.9,atester

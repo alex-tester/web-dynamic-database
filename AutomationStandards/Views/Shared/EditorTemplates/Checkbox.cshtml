@@ -1,0 +1,49 @@
+﻿@model string
+@{
+    //string FieldValue = ViewBag.Value ?? Model;
+    string FieldValue = string.IsNullOrEmpty(ViewBag.Value) ? "false" : ViewBag.Value;
+    bool UseList = ViewBag.UseList ?? false;
+    string FieldName = null;
+    if (UseList)
+    {
+        FieldName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    }
+    else
+    {
+        FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    }
+    //string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+
+    bool cbVal = Convert.ToBoolean(FieldValue);
+
+    string ValErrorMessage = "Please provide the " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+}
+
+
+<div class="custom-control custom-checkbox custom-control-primary">
+        @{
+
+            if (cbVal)
+            {
+                <input @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") type="checkbox" class="custom-control-input" id="@FieldName" name="@FieldName" checked title="@ValErrorMessage" value="true" />
+            }
+            else
+            {
+                <input @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") type="checkbox" class="custom-control-input" id="@FieldName" name="@FieldName" title="@ValErrorMessage" value="true" />
+            }
+            <label class="custom-control-label" for="@FieldName"></label>
+        }
+    </div>
+
+
+@*@if (cbVal)
+{
+    <input type="checkbox" id="@FieldName" name="@FieldName" checked  />
+}
+else
+{
+    <input type="checkbox" id="@FieldName" name="@FieldName" />
+}*@

@@ -1,0 +1,83 @@
+﻿<!-- Right Side Overlay-->
+<aside id="side-overlay">
+    <!-- Side Overlay Scroll Container -->
+    <div id="side-overlay-scroll">
+        <!-- Side Header -->
+        <div class="side-header side-content">
+            <!-- Layout API, functionality initialized in App() -> uiLayoutApi() -->
+            <button class="btn btn-sm btn btn-sm-default pull-right" type="button" data-toggle="layout" data-action="side_overlay_close">
+                <i class="fa fa-times"></i>
+            </button>
+
+        </div>
+        <!-- END Side Header -->
+        <!-- Side Content -->
+        <div class="side-content remove-padding-t">
+
+
+
+            <!-- Quick Settings -->
+            <div class="block pull-r-l">
+                <div class="block-header bg-gray-lighter">
+                    <ul class="block-options">
+                        <li>
+                            <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
+                        </li>
+                    </ul>
+                    <h3 class="block-title">Quick Settings</h3>
+                </div>
+                <div class="block-content">
+                    <!-- Quick Settings Form -->
+                    <form class="form-bordered" action="index.html" method="post" onsubmit="return false;">
+                        <div class="form-group faded">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="font-s13 font-w600">Animation</div>
+                                    <div class="font-s13 font-w400 text-muted">Switch on or off</div>
+                                    <div class="font-s13 font-w400 text-muted">(Coming Soon)</div>
+                                </div>
+                                <div class="col-xs-4 text-right">
+                                    <label class="css-input switch switch-sm switch-primary push-10-t">
+                                        <input type="checkbox" checked="checked" disabled="disabled"><span></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                    <!-- END Quick Settings Form -->
+                </div>
+            </div>
+            <!-- END Quick Settings -->
+
+
+            <div id="LoggedInUser" class="block pull-r-l">
+                <div class="block-header bg-gray-lighter">
+                    <ul class="block-options"></ul>
+                    <h3 class="block-title">Logged in user <i class="fa fa-user fa-pull-right"></i></h3>
+
+                </div>
+                <div class="block-content">
+
+                    <div class="pull-left">@User.Identity.Name</div>
+                    <div class="pull-right"><button disabled="disabled" class="btn btn-sm btn btn-sm-xs btn btn-sm-default faded">Log Out</button></div>
+
+                </div>
+
+
+
+            </div>
+            <!-- END Side Content -->
+        </div>
+        <!-- END Side Overlay Scroll Container -->
+        <!-- added the following div to resolve error in VS-->
+    </div>
+</aside>
+<!-- END Right Side Overlay -->
+
+
+<script type="text/javascript">
+
+    $('[data-toggle="popover"]').popover();
+</script>

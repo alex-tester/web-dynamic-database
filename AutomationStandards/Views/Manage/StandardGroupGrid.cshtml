@@ -1,0 +1,109 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model List<StandardGroupModel>
+@{ 
+    var ShowManageButton = true;
+}
+    <div class="block">
+
+        <!--Table header area-->
+
+        <div class="block-header">
+            <h3 class="block-title text-primary"><i class="fa fa-database"></i> Total Standard Groups: @Model.Count</h3>
+            <div class="block-options">
+                @*<button type="button" class="btn btn-sm btn-outline-secondary" onclick="LoadPageBody('StandardGrid','Manage',false,0);"><i class="fa fa-backward"></i> Back</button>*@
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick='window.location="@Url.Action("Index","Manage")"'><i class="fa fa-backward"></i> Back</button>
+                @if (ShowManageButton)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="ShowPopUpEditorDynamic('StandardGroupEditor','Manage','0','Add Standard Group', 'ProcessStandardGroupModel', 'Manage', 'StandardGroupGrid', 'Manage', false, 0);"><i class="fa fa-plus-square mr-1"></i>Add Group</button>
+                }
+
+
+                <button class="btn btn-sm btn-outline-success" type="button" onclick="javascript: RefreshStandardGroupGrid();"><i class="si si-refresh"></i></button>
+                <div class="timeline-event-time block-options-item font-size-sm font-w600">
+
+                </div>
+            </div>
+        </div>
+
+        <!--End table header area-->
+
+        <div class="block-content">
+
+            <table class="table table-bordered table-striped js-dataTable-full dataTable table-condensed  table-responsive" id="obs_datatable">
+                <thead>
+                    <tr>
+
+                        <th>StandardGroup Name</th>
+                        <th style="width:150px;"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td class="font-w600">@item.StandardGroupName</td>
+                            <td class="font-w600">
+                                <button class="btn btn-sm btn-outline-info" type="button" title="Edit @item.StandardGroupName Standard Group" onclick="javascript:ShowPopUpEditorDynamic('StandardGroupEditor','Manage',@item.StandardGroupID,'Edit Standard Group', 'ProcessStandardGroupModel', 'Manage', 'StandardGroupGrid', 'Manage', false, 0);"><i class="fa fa-edit"></i></button>
+                                @*<button class="open-DeleteConfirmation btn btn-sm btn-danger" title="Delete @item.StandardGroupName StandardGroup" data-toggle="modal" data-objectname="@item.StandardGroupName" data-id="@item.StandardGroupID" data-target="#DeleteConfirmation"><i class="fa fa-trash"></i></button>*@
+                                <button class="btn btn-sm btn-danger" type="button" onclick='javascript:ShowPopUpDelete("DeleteStandardGroupModel", "Manage", "@item.StandardGroupID", "@item.StandardGroupName as a Standard Group", "StandardGroupGrid", false, "0")'><i class="fa fa-trash"></i></button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="DeleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog-slideup">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary-dark text-white">
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                    </div>
+                    <div class="modal-body center">
+                        Are you sure you want to delete the StandardGroup <strong><label id="DeleteObjectName"></label></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" name="delConfirm" id="delConfirm">Delete StandardGroup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        document.title = "Task Type - " +  "Manage Standard Framework";
+
+        $("#obs_datatable").dataTable( {
+
+            stateSave: true
+        } );
+    });
+
+    $(document).on("click", ".open-DeleteConfirmation", function () {
+        var StandardGroupID = $(this).data('id');
+        var StandardGroupName = $(this).data('objectname');
+
+        $(".modal-body #DeleteObjectName").text(StandardGroupName);
+
+        $(".modal-footer #delConfirm").unbind("click");
+
+        $(".modal-footer #delConfirm").click(function () {
+            $("#DeleteConfirmation").modal('hide');
+            $(".modal-backdrop").remove();
+            DeleteStandardGroup(StandardGroupID);
+        });
+    });
+
+
+
+</script>

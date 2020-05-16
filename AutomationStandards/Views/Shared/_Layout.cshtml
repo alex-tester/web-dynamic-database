@@ -1,0 +1,637 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @*<title>@ViewData["Title"] - Server Inventory Database</title>*@
+    *
+    <title>Observicing</title>
+    <meta name="description" content="Observicing">
+    <meta name="author" content="Alex Tester">
+    @*<meta name="robots" content="noindex, nofollow">*@
+
+    <!-- Open Graph Meta -->
+    <meta property="og:title" content="Observicing">
+    <meta property="og:site_name" content="Observicing">
+    <meta property="og:description" content="Observicing">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    @*<meta property="og:image" content="@Url.Content("~/assets/media/hand-o-peace.ico")">*@
+
+    <!-- Icons -->
+    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+    @*<link rel="shortcut icon" href="@Url.Content("~/assets/media/hand-o-peace.ico")">
+        <link rel="icon" type="image/png" sizes="192x192" href="@Url.Content("~/assets/media/hand-o-peace.ico")">
+        <link rel="apple-touch-icon" sizes="180x180" href="@Url.Content("~/assets/media/hand-o-peace.ico")">*@
+    <!--DATATABLES REPLACEMENT-->
+    <script src="@Url.Content("~/assets/js/core/jquery.min.js")"></script>
+    <link rel="stylesheet" href="@Url.Content("~/assets/js/plugins/sweetalert2/sweetalert2.min.css")">
+    @*<link href="@Url.Content("~/assets/js/plugins/datatables/jquery.dataTables.css")" rel="stylesheet" />*@
+    <link href="@Url.Content("~/assets/js/plugins/datatables/rowReorder.bootstrap.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/js/plugins/datatables/rowReorder.dataTables.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/js/plugins/datatables/rowReorder.jqueryui.min.css")" rel="stylesheet" />
+    @*<link href="@Url.Content("~/assets/js/plugins/datatables/responsive.dataTables.min.css")" rel="stylesheet" />*@
+    <!--REPLACED WITH ABOVE FOR DATATABLE RE-ORDER - 2020.04.27-->
+    <link rel="stylesheet" href="@Url.Content("~/assets/js/plugins/datatables/1.10.19/dataTables.bootstrap4.css")">
+    <link rel="stylesheet" href="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons-bs4/buttons.bootstrap4.min.css")">
+
+    <link rel="stylesheet" href="@Url.Content("~/assets/js/plugins/select2/css/select2.css")" />
+
+    @*<link rel="stylesheet" href="@Url.Content("~/assets/js/plugins/jquery-auto-complete/jquery.auto-complete.min.css")"  />*@
+    <link rel="stylesheet" href="@Url.Content("~/assets/js/plugins/jquery-ui/jquery-ui.css")" />
+
+    <!-- Fonts and OneUI framework -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600,700%7COpen+Sans:300,400,400italic,600,700">
+    <link rel="stylesheet" id="css-main" href="@Url.Content("~/assets/css/oneui.min.css")">
+
+
+
+    @*Make your own site.css*@
+
+    <link rel="stylesheet" href="@Url.Content("~/assets/css/site.min.css")">
+
+    <!-- You can include a specific file from css/themes/ folder to alter the default color theme of the template. eg: -->
+    <!-- <link rel="stylesheet" id="css-theme" href="assets/css/themes/amethyst.min.css"> -->
+    <!-- END Stylesheets -->
+</head>
+<body>
+    <!-- Page Container -->
+    <div id="page-loader" class="show"></div>
+
+
+    <div id="page-container" class="enable-cookies sidebar-o sidebar-dark enable-page-overlay side-scroll page-header-fixed">
+
+        <!-- Sidebar -->
+
+        <nav id="sidebar" aria-label="Main Navigation">
+            <!-- Side Header -->
+            <div class="content-header bg-white-5">
+                <!-- Logo -->
+                <a class="font-w600 text-dual" href="@Url.Action("Index","Home")">
+                    @*<img src="@Url.Content("~/assets/images/hand-o-peace.ico")" height="24" width="24" />*@
+                    <span class="smini-hide">
+                        <span class="font-w700 font-size-h5">Observicing</span>
+                    </span>
+                </a>
+                <!-- END Logo -->
+                <!-- Options -->
+                <div>
+                    <!-- Color Variations -->
+                    <!-- END Themes -->
+                    <!-- Close Sidebar, Visible only on mobile screens -->
+                    <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                    <a class="d-lg-none text-dual ml-3" data-toggle="layout" data-action="sidebar_close" href="javascript:void(0)">
+                        <i class="fa fa-times"></i>
+                    </a>
+                    <!-- END Close Sidebar -->
+                </div>
+                <!-- END Options -->
+            </div>
+            <!-- END Side Header -->
+            <!-- Side Navigation -->
+
+
+
+            <div class="content-side content-side-full">
+                <ul class="nav-main">
+
+                    <li class="nav-main-item">
+                        <a class="nav-main-link" id="nav_View" href="@Url.Action("Index", "Standard" )">
+                            <i class="nav-main-link-icon si si-speedometer"></i>
+                            <span class="nav-main-link-name">Standards Data</span>
+                        </a>
+                    </li>
+
+
+
+                    <li class="nav-main-item">
+                        <a class="nav-main-link" id="nav_Manage" href="@Url.Action("Index", "Manage" )">
+                            <i class="nav-main-link-icon si si-speedometer"></i>
+                            <span class="nav-main-link-name">Standards Configuration</span>
+                        </a>
+                    </li>
+
+
+
+
+                    @*<li class="nav-main-item">
+                            <a class="nav-main-link nav-main-link-submenu" id="nav_manage" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                                <i class="nav-main-link-icon fa fa-hdd"></i>
+                                <span class="nav-main-link-name">Manage</span>
+                            </a>
+                            <ul class="nav-main-submenu">
+
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" href="@Url.Action("Index", "Manage")">
+                                        <span class="nav-main-link-name">All</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link" href="@Url.Action("Roles", "Manage" )">
+                                        <span class="nav-main-link-name">Roles</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main0-link" asp-area="" asp-controller="Role" asp-action="Index"> <span class="nav-main-link-name">Role</span></a>
+                                </li>
+
+                            </ul>
+                        </li>*@
+
+
+                </ul>
+
+            </div>
+            <!-- END Side Navigation -->
+        </nav>
+        <!-- END Sidebar -->
+        <!-- Header -->
+        <header id="page-header">
+            <!-- Header Content -->
+            <div class="content-header">
+                <!-- Left Section -->
+                <div class="d-flex align-items-center" style="width:80%">
+                    <!-- Toggle Sidebar -->
+                    <!-- Layout API, functionality initialized in Template._uiApiLayout()-->
+                    <button type="button" class="btn btn-sm btn-dual mr-2 d-lg-none" data-toggle="layout" data-action="sidebar_toggle">
+                        <i class="fa fa-fw fa-bars"></i>
+                    </button>
+                    <!-- END Toggle Sidebar -->
+                    <!-- Toggle Mini Sidebar -->
+                    <!-- Layout API, functionality initialized in Template._uiApiLayout()-->
+                    <button type="button" class="btn btn-sm btn-dual mr-2 d-none d-lg-inline-block" data-toggle="layout" data-action="sidebar_mini_toggle" onclick="setSidebarToggle();">
+                        <i class="fa fa-fw fa-ellipsis-v"></i>
+                    </button>
+                    <!-- END Toggle Mini Sidebar -->
+                    <!-- Apps Modal -->
+                    <!-- Opens the Apps modal found at the bottom of the page, after footer’s markup -->
+                    @*<button type="button" class="btn btn-sm btn-dual mr-2" data-toggle="modal" data-target="#one-modal-apps">
+                            <i class="si si-grid"></i>
+                        </button>*@
+                    <!-- END Apps Modal -->
+                    <!-- Open Search Section (visible on smaller screens) -->
+                    <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                    <button type="button" class="btn btn-sm btn-dual d-sm-none" data-toggle="layout" data-action="header_search_on">
+                        <i class="si si-magnifier"></i>
+                    </button>
+                    <!-- END Open Search Section -->
+
+                </div>
+                <!-- END Left Section -->
+                <!-- Right Section -->
+                @*<partial name="_LoginPartial" />*@
+
+
+
+            </div>
+            <!-- END Right Section -->
+            <!-- END Header Content -->
+            <!-- Header Search -->
+            <div id="page-header-search" class="overlay-header bg-white">
+                <div class="content-header">
+                    @*<form class="w-100" action="be_pages_generic_search.html" method="POST">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+
+                                    <button type="button" class="btn btn-danger" data-toggle="layout" data-action="header_search_off">
+                                        <i class="fa fa-fw fa-times-circle"></i>
+                                    </button>
+                                </div>
+                                <select class="form-control col-sm-3" id="globalSearchTypeSmall">
+                                    <option value="application">Application</option>
+                                    <option value="server">Server</option>
+                                </select>
+                                <input type="text" class="form-control" placeholder="Search or hit ESC.." id="globalSearchTextSmall">
+                            </div>
+                        </form>*@
+                </div>
+            </div>
+            <!-- END Header Search -->
+            <!-- Header Loader -->
+            <!-- Please check out the Loaders page under Components category to see examples of showing/hiding it -->
+            <div id="page-header-loader" class="overlay-header bg-white">
+                <div class="content-header">
+                    <div class="w-100 text-center">
+                        <i class="fa fa-fw fa-circle-notch fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- END Header Loader -->
+        </header>
+        <!-- END Header -->
+        <!-- Main Container -->
+        @*<script src="@Url.Content("~/assets/js/plugins/jquery-ui/jquery-ui.min.js")"></script>*@
+
+
+
+
+        <main id="main-container" style="padding-top: 0px;">
+            <div class="block">
+                <!-- Hero -->
+                @*<br /><br />*@
+                @RenderBody()
+                <!-- END Page Content -->
+            </div>
+
+        </main>
+        <!-- END Main Container -->
+        <!-- Footer -->
+        <footer id="page-footer" class="bg-body-light">
+            <div class="content py-3">
+                <div class="row font-size-sm">
+                    <div class="pull-left">
+                        @*Built <b>by</b> .
+                            <br />*@
+                        &copy; <span class="js-year-copy"></span> Alex Tester
+                        <br />
+                        @*Last Update: <span id="CompileDate"></span>*@
+                        Last Update: <span id="CompileDate">09/29/2019</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- END Footer -->
+        <!-- Apps Modal -->
+        <!-- Opens from the modal toggle button in the header -->
+        <div class="modal fade" id="one-modal-apps" tabindex="-1" role="dialog" aria-labelledby="one-modal-apps" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="block block-themed block-transparent mb-0">
+                        <div class="block-header bg-primary-dark">
+                            <h3 class="block-title">Apps</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                    <i class="si si-close"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="block-content block-content-full">
+                            <div class="row gutters-tiny">
+                                <div class="col-6">
+
+                                    <a class="block block-rounded block-themed bg-default" href="javascript:void(0)">
+                                        <div class="block-content text-center">
+                                            <i class="si si-speedometer fa-2x text-white-75"></i>
+                                            <p class="font-w600 font-size-sm text-white mt-2 mb-3">
+                                                OneDash
+                                            </p>
+                                        </div>
+                                    </a>
+
+                                </div>
+                                <div class="col-6">
+
+                                    <a class="block block-rounded block-themed bg-danger" href="javascript:void(0)">
+                                        <div class="block-content text-center">
+                                            <i class="si si-rocket fa-2x text-white-75"></i>
+                                            <p class="font-w600 font-size-sm text-white mt-2 mb-3">
+                                                OneClick
+                                            </p>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Apps Modal -->
+        <!--Global Modals-->
+        <!-- Vertically Centered Block Modal -->
+        <div class="modal" id="globalContentModal" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="block block-themed block-transparent mb-0">
+                        <div class="block-header bg-primary-dark">
+                            <h3 id="contentModalTitleText" class="block-title">Title</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                                    <i class="fa fa-fw fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="contentModalContent" class="block-content font-size-sm">
+                            <div class="row">
+                                <div class="col-md-3 text-center">
+                                    <span class="obs-image-center-vertically">
+                                        <img class="text-center" src="" />
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="block-content block-content-full text-right border-top">
+                            <button type="button" class="btn btn-sm btn-outline-warning" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-sm btn-outline-success" id="saveBtnModelContent"><i class="fa fa-check mr-1"></i>Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="globalModal" tabindex="-1" role="dialog" aria-labelledby="modal-block-vcenter" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-popin">
+                <div class="modal-content">
+                    <div class="block block-themed block-transparent mb-0">
+                        <div id="globalModalHeader" class="block-header">
+                            <h3 id="globalModalTitleText" class="block-title">Please Wait...</h3>
+
+                        </div>
+                        <div id="globalModalContent" class="block-content font-size-sm">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <span class="obs-image-center-vertically">
+                                        <img class="text-center" src="" />
+                                    </span>
+                                </div>
+                                <div class="col-md-7">
+                                    <h4 id="loadingModalText" class="text-center"></h4>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="globalModalFooter" class="block-content block-content-full text-right border-top">
+                        <a id="globalModalRedBtn" class="btn btn-sm btn-outline-danger" data-dismiss="modal"><i class="fa fa-times-circle"></i> red button</a>
+                        <a id="globalModalGreenBtn" class="btn btn-sm btn-outline-success" data-dismiss="modal"><i class="fa fa-check-circle"></i> green button</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Vertically Centered Block Modal -->
+        <!--END Global Modals-->
+    </div>
+    <!-- END Page Container -->
+    <!--
+        OneUI JS Core
+
+        Vital libraries and plugins used in all pages. You can choose to not include this file if you would like
+        to handle those dependencies through webpack. Please check out assets/_es6/main/bootstrap.js for more info.
+
+        If you like, you could also include them separately directly from the assets/js/core folder in the following
+        order. That can come in handy if you would like to include a few of them (eg jQuery) from a CDN.
+
+        assets/js/core/jquery.min.js
+        assets/js/core/bootstrap.bundle.min.js
+        assets/js/core/simplebar.min.js
+        assets/js/core/jquery-scrollLock.min.js
+        assets/js/core/jquery.appear.min.js
+        assets/js/core/js.cookie.min.js
+    -->
+
+
+    <script src="@Url.Content("~/assets/js/oneui.core.min.js")" aria-hidden="true"></script>
+    <!--
+        OneUI JS
+
+        Custom functionality including Blocks/Layout API as well as other vital and optional helpers
+        webpack is putting everything together at assets/_es6/main/app.js
+    -->
+    <script src="@Url.Content("~/assets/js/oneui.app.min.js")" aria-hidden="true"></script>
+
+    <!-- Page JS Plugins -->
+    <!-- Page JS Plugins -->
+
+
+
+
+
+
+    <script src="@Url.Content("~/assets/js/plugins/jquery-ui/jquery-ui.min.js")"></script>
+
+
+
+
+
+
+
+
+
+    @*<link href="@Url.Content("~/assets-obs/css/jqueryui.css")" rel="stylesheet" />
+        <script src="@Url.Content("~/assets-obs/js/jqueryui.js")"></script>*@
+
+    <script src="@Url.Content("~/assets/js/plugins/easy-pie-chart/jquery.easypiechart.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/jquery-sparkline/jquery.sparkline.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/chart.js/Chart.bundle.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/es6-promise/es6-promise.auto.min.js")" aria-hidden="true"></script>
+    <script src="@Url.Content("~/assets/js/plugins/sweetalert2/sweetalert2.min.js")" aria-hidden="true"></script>
+    <script src="@Url.Content("~/assets/js/plugins/select2/js/select2.full.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js")"></script>
+
+
+
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/dataTables.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons/dataTables.buttons.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons/buttons.print.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons/jszip.min.js")"></script>
+
+    @*<script src="@Url.Content("~/assets/js/plugins/datatables/buttons/pdfmake.min.js")"></script>*@
+
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons/vfs_fonts.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons/buttons.html5.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons/buttons.flash.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/1.10.19/buttons/buttons.colVis.min.js")"></script>
+
+    <!--DATATABLES REPLACEMENT FOR REORDER-->
+    @*<script src="@Url.Content("~/assets/js/plugins/datatables/jquery.dataTables.js")"></script>
+    <script src="@Url.Content("~/assets/js/pages/base_tables_datatables.js")"></script>*@
+
+    <script src="@Url.Content("~/assets/js/plugins/datatables/dataTables.colReorder.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/dataTables.rowReorder.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/datatables/dataTables.responsive.min.js")"></script>
+
+    <script src="@Url.Content("~/assets/js/plugins/jquery-validation/jquery.validate.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/plugins/jquery-validation/additional-methods.js")"></script>
+
+
+
+
+    <script src="@Url.Content("~/assets/js/site.js")"></script>
+    <script src="@Url.Content("~/assets/js/standardsfunctions.js")"></script>
+    <input id="ActnUrl" style="display: none" value="@Url.Action("Action", "Controller")" />
+    <script>
+
+        swal.setDefaults({
+            buttonsStyling: false,
+            confirmButtonClass: 'btn btn-success m-1',
+            cancelButtonClass: 'btn btn-danger m-1',
+            inputClass: 'form-control'
+        });
+
+        @*$.ajaxSetup({
+            beforeSend: function () {
+                swal({
+                    title: "",
+                    text: "Please wait.",
+                    imageUrl: "@Url.Content("~/assets-obs/images/cc_bug.gif")",
+                    showConfirmButton: false
+                });
+            },
+            error: function (jqXHR, textStatus, thrownError) {
+                if (jqXHR.status == 401) {
+                    var loginUrl = "@Url.Action("Login","Account")";
+                    window.location = loginUrl + "?ReturnUrl=" + window.location.pathname + window.location.search;
+
+                } else {
+                    console.log("Error : " + textStatus + ": " + thrownError);
+                    alert("Error: " + textStatus + ": " + thrownError);
+                }
+            },
+            complete: function (jqXHR) {
+                // hide gif here, eg:
+                swal.close();
+
+                setSessionTimeOut(20, 18);
+
+            }
+        });*@
+
+        $(document).ajaxSend(function () {
+            swal({
+                title: "",
+                text: "Please wait...",
+                imageUrl: "@Url.Content("~/assets/images/loader.gif")",
+                showConfirmButton: false
+            });
+        });
+
+        $(document).ajaxError(function (jqXHR, textStatus, thrownError) {
+            if (jqXHR.status == 401) {
+                var loginUrl = "@Url.Action("Login","Account")";
+                window.location = loginUrl + "?ReturnUrl=" + window.location.pathname + window.location.search;
+
+            } else {
+                var errMsg = "Sorry but something didn't go so well.  Please try again and if it happens again, contact the Site Administrator.  Error Message : ";
+                errMsg += textStatus + ": " + thrownError;
+                swal("Error", errMsg , "error")
+            }
+        });
+
+        $(document).ajaxComplete(function (jqXHR) {
+            if (swal.getTitle() != null) {
+                if (swal.getTitle().innerText == "") {
+                    swal.close();
+                }
+            }
+            
+        });
+
+
+        function getActionURL(action, controller) {
+            //debugger;
+            var s = '@Url.Action("Action", "Controller")'
+            //var s = $('#ActnUrl').val();
+            s = s.replace("Action", action);
+            s = s.replace("Controller", controller);
+
+            return s;
+        }
+
+        function highlightNavMenu(menuName) {
+            $('.nav-main-link').removeClass('active');
+            $('#nav_' + menuName).addClass('active')
+        }
+
+        //function LoadPageBody(Action, Controller, UseId, Id) {
+
+        //var url = getActionURL(Action, Controller);
+
+        //    //url = url.replace("Actn", Action);
+        //    //url = url.replace("Cntrlr", Controller);
+
+        //    if (UseId) {
+        //        url = url + "/" + Id;
+        //    }
+
+
+        //$("#pageBody").load(url, function () {
+
+        //});
+
+        //$("html, body").animate({ scrollTop: 0 }, "slow");
+
+
+        //}
+
+        //function ProcessForm(Action, Controller, ReloadAction, ReloadController, UseId, Id) {
+
+        //    if ($("#frmEditor").valid()) {
+
+        //        //debugger;
+        //        var url = getActionURL(Action, Controller);
+        //        var fData = $("#frmEditor").serialize();
+
+        //            $("#frmEditor").submit(function (e) {
+        //    e.preventDefault();
+        //});
+        //        //debugger;
+        //        //var jqxhr = $.post(url, fData)
+        //        //    .done(function (result) {
+        //        //        debugger;
+        //        //        alert(result.Id);
+        //        //        var newId = result.Id;
+        //        //        if (UseId) {
+        //        //            LoadPageBody(ReloadAction, ReloadController, UseId, Id);
+        //        //        }
+        //        //        else {
+        //        //            LoadPageBody(ReloadAction, ReloadController, true, newId);
+        //        //        }
+
+        //        //    })
+
+        //        $.ajax({
+
+        //            type: 'POST',
+        //            url: url,
+        //            data: fData,
+        //            success: function (data) {
+        //                //LoadPageBody('_ServerDocument', ObjectId);
+        //                //ClosePopupEditor();
+        //                //alert(data.id);
+        //                var newId = data.id;
+        //                        if (UseId) {
+        //                    LoadPageBody(ReloadAction, ReloadController, UseId, Id);
+        //                }
+        //                else {
+        //                    LoadPageBody(ReloadAction, ReloadController, true, newId);
+        //                }
+        //            },
+        //                fail: function (data) {
+        //                        alert("fail");
+        //                    }
+        //        });
+        //    }
+
+        //}
+
+        function ShowPopUpInfo(Html, Title, WidthPx) {
+            swal({
+                title: Title,
+                type: "info",
+                html: Html,
+                width: WidthPx + 'px'
+            });
+        }
+
+              function ShowiLoSensorResults() {
+                ShowPopUpInfo($('#iLO_Sensors').html(), "iLO Sensor Results", 800);
+            }
+        function RefreshStandardGroupGrid() {
+    $("#divGrid").fadeOut("fast").fadeIn("fast").load(getActionURL("StandardGroupGrid", "Manage"));
+        }
+
+
+    </script>
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+</html>
+

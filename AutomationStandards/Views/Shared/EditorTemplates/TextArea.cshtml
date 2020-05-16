@@ -1,0 +1,48 @@
+﻿@model string
+@{
+    string FieldValue = ViewBag.Value ?? Model;
+    bool UseList = ViewBag.UseList ?? false;
+    string FieldName = null;
+    if (UseList)
+    {
+        FieldName = ViewData.TemplateInfo.HtmlFieldPrefix;
+    }
+    else
+    {
+        FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    }
+    //string FieldName = ViewData.TemplateInfo.HtmlFieldPrefix.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
+    string RegExp = ViewBag.RegExp;
+    string ValErrorMessage = "Please provide the " + ViewBag.Title;
+    string Placeholder = "Please enter the " + ViewBag.Title;
+    bool FieldDisabled = ViewBag.FieldDisabled;
+
+    int maxLength = Convert.ToInt32(ViewData["MaxLength"]);
+    if (maxLength == 0)
+    {
+        maxLength = 250;
+    }
+
+    int rows = Convert.ToInt32(ViewBag.Rows);
+}
+
+
+
+
+@{
+
+    if (bool.Parse(ViewData["Required"].ToString()))
+    {
+
+        <textarea @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") class="js-maxlength form-control" id="@FieldName" name="@FieldName" required placeholder="@Placeholder" rows="@rows" title="@ValErrorMessage" maxlength="@maxLength" 
+                  data-always-show="true" data-placement="right" data-warning-class="badge badge-primary" data-limit-reached-class="badge badge-danger">@FieldValue</textarea>
+
+    }
+    else
+    {
+
+        <textarea @(bool.Parse(FieldDisabled.ToString()) ? "disabled" : "") class="js-maxlength form-control" id="@FieldName" name="@FieldName" placeholder="@Placeholder" rows="@rows"  maxlength="@maxLength" title="@ValErrorMessage" 
+                  data-always-show="true" data-placement="right" data-warning-class="badge badge-primary" data-limit-reached-class="badge badge-danger">@FieldValue</textarea>
+    }
+
+}

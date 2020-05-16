@@ -1,0 +1,146 @@
+﻿@using AutomationStandards.Models.CustomModels
+@model StandardValueSingle
+
+@{
+    List<SelectListItem> BooleanList = new List<SelectListItem>();
+    BooleanList.Add(new SelectListItem() { Value = "False", Text = "False" });
+    BooleanList.Add(new SelectListItem() { Value = "True", Text = "True" });
+    string defaultLabelWidth = "4";
+    string defaultFieldWidth = "7";
+}
+
+
+
+    <form id="frmEditor" class="js-validation" method="post">
+
+
+        <input type="hidden" id="ID" name="ID" value="@Model.dtRow["ID"]" />
+        @Html.HiddenFor(model => model.StandardID)
+
+        @foreach (StandardConfigModel config in Model.Config.OrderBy(c => c.SortOrder))
+        {
+            if (config.UseStandardData)
+            {
+                
+                List<SelectListItem> data = new List<SelectListItem>();
+                if (config.StandardLUID == null || config.StandardLUValue == null)
+                {
+
+                }
+                else
+                {
+                    data = new StandardSQLManagement().GetStandardValueDDLCustomFilter(config.StandardLUID, config.StandardLUValue, config.StandardLUValue, config.StandardUseFilter, config.StandardFilterSQL);
+                }
+
+
+                if (config.AllowMultiSelect)
+                {
+                    @Html.EditorFor(x => x.dtRow[config.FieldName], "_FieldEditor", config.FieldName, new { FieldType = "DropdownMulti", FieldLabel = config.DisplayName, Required = false, showHelp = @config.UseToolTip, helpMessage = @config.ToolTip, List = data })
+                }
+                else
+                {
+                    @Html.EditorFor(x => x.dtRow[config.FieldName], "_FieldEditor", config.FieldName, new { FieldType = "Dropdown", FieldLabel = config.DisplayName, Required = false, showHelp = @config.UseToolTip, helpMessage = @config.ToolTip, List = data })
+                }
+
+
+            }
+            else
+            {
+                switch (config.SQLDataType.ToUpper())
+                {
+                    case "BIT":
+ 
+                        @Html.EditorFor(x => x.dtRow[config.FieldName], "_FieldEditor", config.FieldName, new { FieldType = "Dropdown", FieldLabel = config.DisplayName, Required = false, showHelp = @config.UseToolTip, helpMessage = @config.ToolTip, List = BooleanList })
+
+                        break;
+
+                    case "INT":
+
+                        @Html.EditorFor(x => x.dtRow[config.FieldName], "_FieldEditor", @config.FieldName, new { FieldType = "Number", FieldLabel = @config.DisplayName, Required = false, showHelp = @config.UseToolTip, helpMessage = config.ToolTip, RegExp = "", MaxLength = 2147483646 })
+                        
+                        break;
+
+                    case "DATETIME":
+
+                        @Html.EditorFor(x => x.dtRow[config.FieldName], "_FieldEditor", @config.FieldName, new { FieldType = "DateTimePicker", FieldLabel = @config.DisplayName, Required = false, showHelp = @config.UseToolTip, helpMessage = @config.ToolTip, RegExp = "", MaxLength = 50 })
+
+                        break;
+
+                    default:
+                        
+                        string MaxLength = config.DataTypeName.Split('(', ')')[1];
+
+                        if (Convert.ToInt32(MaxLength) >= 300)
+                        {
+                            @Html.EditorFor(x => x.dtRow[config.FieldName], "_FieldEditor", @config.FieldName, new { FieldType = "TextArea", FieldLabel = @config.DisplayName, Required = false, showHelp = @config.UseToolTip, helpMessage = @config.UseToolTip, Rows = "3", MaxLength = MaxLength })
+                        }
+                        else
+                        { 
+                            @Html.EditorFor(x => x.dtRow[config.FieldName], "_FieldEditor", @config.FieldName, new { FieldType = "Textbox", FieldLabel = @config.DisplayName, Required = false, showHelp = @config.UseToolTip, helpMessage = @config.ToolTip, RegExp = "", MaxLength = MaxLength, HideField = false })
+                        }
+                        break;
+                }
+            }
+
+        }
+
+
+
+        @Html.EditorFor(x => x.dtRow["SortOrder"], "_FieldEditor", "SortOrder", new { FieldType = "Number", FieldLabel = "Sort Order", Required = false, showHelp = false, helpMessage = "", RegExp = "", MaxLength = 2147483646 })
+
+
+        @Html.EditorFor(x => x.dtRow["Enabled"], "_FieldEditor", "Enabled", new { FieldType = "Dropdown", FieldLabel = "Enabled", Required = true, showHelp = false, helpMessage = "", List = BooleanList })
+
+        <div class="form-group">
+            <div class="col-xs-12">
+
+
+                @{
+                    string ButtonValue;
+                    if (Model.dtRow["ID"].ToString() == "0")
+                    {
+                        ButtonValue = "Insert Value";
+                    }
+                    else
+                    {
+                        ButtonValue = "Update Value";
+                    }
+                }
+
+
+
+            </div>
+        </div>
+
+
+    </form>
+
+        @*<script src="~/assets/js/pages/base_forms_wizard.js"></script>*@
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        //Make obs_datatable into a sortable table with datatable.js
+        //$('#obs_datatable').DataTable();
+
+        //jQuery(function () {
+        //    App.initHelpers(['select2', 'tags-inputs']);
+        //});
+         initValidationHorizontal();
+        jQuery(function () { One.helpers(['datepicker', 'maxlength', 'select2']); });
+        $('[data-toggle="popover"]').popover();
+        $("[data-toggle=popover]").popover();
+
+
+
+    });
+
+    $("#frmEditor").submit(function (e) {
+        e.preventDefault();
+    });
+
+
+
+</script>
